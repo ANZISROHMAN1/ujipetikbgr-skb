@@ -1,0 +1,4589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Monitoring Uji Petik - District Bogor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #070a12;
+      --bg-subtle: #0d121f;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-solid: #111827;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(30, 41, 59, 0.85);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --success: #10b981;
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --success-glow: rgba(16, 185, 129, 0.25);
+      --warning: #f59e0b;
+      --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --warning-glow: rgba(245, 158, 11, 0.25);
+      --danger: #ef4444;
+      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      --danger-glow: rgba(239, 68, 68, 0.25);
+      --accent: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      --telkom-red: #f43f5e;
+      --header-bg: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(13, 18, 31, 0.95) 100%);
+      --chart-track: rgba(255, 255, 255, 0.06);
+      --input-bg: rgba(15, 23, 42, 0.8);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --table-head: rgba(15, 23, 42, 0.9);
+      --table-head-border: rgba(255, 255, 255, 0.08);
+      --table-row-border: rgba(255, 255, 255, 0.05);
+      --table-row-hover: rgba(59, 130, 246, 0.06);
+      --stat-box-bg: rgba(15, 23, 42, 0.6);
+      --glass-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    body.light-theme {
+      --bg: #f8fafc;
+      --bg-subtle: #f1f5f9;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-solid: #ffffff;
+      --card-border: rgba(0, 0, 0, 0.07);
+      --card-hover: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --primary-glow: rgba(37, 99, 235, 0.16);
+      --success: #059669;
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --success-glow: rgba(5, 150, 105, 0.16);
+      --warning: #d97706;
+      --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --warning-glow: rgba(217, 119, 6, 0.16);
+      --danger: #dc2626;
+      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      --danger-glow: rgba(220, 38, 38, 0.16);
+      --accent: #7c3aed;
+      --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      --header-bg: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      --chart-track: #e2e8f0;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --table-head: #f1f5f9;
+      --table-head-border: #e2e8f0;
+      --table-row-border: #f1f5f9;
+      --table-row-hover: #f1f5f9;
+      --stat-box-bg: #f8fafc;
+      --glass-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.06) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--header-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px 30px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f43f5e 0%, #3b82f6 50%, #10b981 100%);
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-logo-chip {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 20px;
+      box-shadow: 0 8px 18px rgba(244, 63, 94, 0.35);
+      flex-shrink: 0;
+    }
+
+    .header-logo-img {
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+      flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .header-logo-img:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 12px 24px rgba(244, 63, 94, 0.4));
+    }
+
+    .header-badge {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(225, 29, 72, 0.08));
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #fb7185;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    body.light-theme .header-badge {
+      background: #ffe4e6;
+      color: #e11d48;
+      border-color: #fecdd3;
+    }
+
+    .header-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    h1 {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-top: 4px;
+    }
+
+    .header-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .header-subtitle strong {
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      border: 1px solid transparent;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    .btn-success {
+      background: var(--success-gradient);
+      color: white;
+      box-shadow: 0 4px 14px var(--success-glow);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--success-glow);
+    }
+
+    .btn-outline {
+      background: var(--card-bg);
+      border-color: var(--card-border);
+      color: var(--text-main);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-outline:hover {
+      background: var(--card-hover);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-theme {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-theme:hover {
+      background: var(--card-hover);
+      transform: translateY(-1px);
+    }
+
+    /* NAVIGATION TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-tab {
+      padding: 11px 20px;
+      border-radius: 12px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    body.light-theme .nav-tab:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-tab.active {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .nav-tab .badge {
+      background: rgba(255, 255, 255, 0.18);
+      color: currentColor;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* HERO GAUGE SECTION */
+    .hero-kpi-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gauge-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radial-chart-wrapper {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      margin: 10px 0;
+    }
+
+    .radial-chart-wrapper svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .radial-track {
+      fill: none;
+      stroke: var(--chart-track);
+      stroke-width: 14;
+    }
+
+    .radial-fill {
+      fill: none;
+      stroke: url(#gauge-gradient);
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 502;
+      stroke-dashoffset: 56.6;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gauge-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .gauge-percentage {
+      font-size: 38px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.04em;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .gauge-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .stat-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    .stat-val {
+      font-size: 32px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .stat-subtext {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-progress-bar {
+      height: 6px;
+      background: var(--chart-track);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .stat-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 1s ease;
+    }
+
+    /* ALERT BANNER */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(185, 28, 28, 0.05) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+    }
+
+    body.light-theme .alert-banner {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .alert-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .alert-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .alert-text h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ef4444;
+      margin-bottom: 2px;
+    }
+
+    .alert-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* PANELS */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* AREA SCORECARDS */
+    .area-scorecards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .area-scorecard {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--glass-shadow);
+      transition: transform 0.2s;
+    }
+
+    .area-scorecard:hover {
+      transform: translateY(-2px);
+    }
+
+    .area-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .area-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .area-pct {
+      font-size: 20px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* SA MATRIX */
+    .sa-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .sa-tile {
+      background: var(--stat-box-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .sa-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .sa-tile.done {
+      border-left: 4px solid var(--success);
+    }
+
+    .sa-tile.pending {
+      border-left: 4px solid var(--danger);
+    }
+
+    .sa-tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sa-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* FILTERS */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-input {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      min-width: 240px;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .select-input {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* TABLES */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    thead th {
+      background: var(--table-head);
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 14px 16px;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--table-head-border);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--table-row-border);
+      color: var(--text-main);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background-color: var(--table-row-hover);
+    }
+
+    .num-col {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    body.light-theme .badge-success {
+      background: #ecfdf5;
+      color: #059669;
+      border-color: #a7f3d0;
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    body.light-theme .badge-danger {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    body.light-theme .badge-warning {
+      background: #fffbeb;
+      color: #d97706;
+      border-color: #fde68a;
+    }
+
+    /* MINI PROGRESS BARS */
+    .table-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--chart-track);
+      border-radius: 999px;
+      overflow: hidden;
+      min-width: 50px;
+    }
+
+    .table-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    /* BOTTLENECK */
+    .bottleneck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .bottleneck-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--glass-shadow);
+      transition: transform 0.2s;
+    }
+
+    .bottleneck-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .bottleneck-card.critical {
+      border-left: 5px solid var(--danger);
+    }
+
+    .bottleneck-card.warning {
+      border-left: 5px solid var(--warning);
+    }
+
+    .bottleneck-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .bottleneck-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .bottleneck-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: var(--stat-box-bg);
+      border-radius: 10px;
+      font-size: 12px;
+      margin-top: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* CHARTS */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .chart-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    .bar-label {
+      width: 140px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 24px;
+      background: var(--chart-track);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+    }
+
+    .bar-fill {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bar-value {
+      width: 65px;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* TABS */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================= */
+    /* PORTRAIT MODAL & CONTAINER                */
+    /* ========================================= */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      max-width: 920px;
+      width: 100%;
+      max-height: 96vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-header {
+      padding: 18px 26px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .portrait-view-selector {
+      display: flex;
+      gap: 6px;
+      background: var(--stat-box-bg);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .portrait-view-btn {
+      padding: 7px 14px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .portrait-view-btn.active {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .modal-body {
+      padding: 26px;
+      overflow-y: auto;
+      display: flex;
+      justify-content: center;
+      background: var(--bg-subtle);
+    }
+
+    /* CAPTURE TARGET CONTAINER */
+    #portrait-canvas-target {
+      width: 840px;
+      background: var(--card-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 34px 30px;
+      color: var(--text-main);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      position: relative;
+    }
+
+    .portrait-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    .portrait-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .portrait-stat-item {
+      background: var(--stat-box-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 14px;
+      text-align: center;
+    }
+
+    .portrait-section {
+      background: var(--stat-box-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .portrait-table-box {
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .portrait-table-box table thead th {
+      background: var(--stat-box-bg);
+      padding: 10px 12px;
+      font-size: 11px;
+    }
+
+    .portrait-table-box table tbody td {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+      #portrait-canvas-target {
+        width: 100%;
+        padding: 20px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+  <defs>
+    <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="container">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-branding">
+      <img src="logo_transparan.png" alt="Monitoring Uji Petik Logo" class="header-logo-img" />
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+          <span class="header-badge">LIVE MONITORING</span>
+          <span style="font-size: 12px; color: var(--telkom-red); font-weight: 800; letter-spacing: 0.04em;">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+        </div>
+        <h1>Dashboard Monitoring Uji Petik</h1>
+        <div class="header-subtitle">
+          <span>📍 District: <strong>BOGOR DAN SUKABUMI</strong></span>
+          <span>•</span>
+          <span>📅 Data Cut-off: <strong>25 Nov 2026, 09:14:40</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button onclick="toggleTheme()" id="btn-theme" class="btn btn-theme" title="Ganti Mode Terang / Gelap">
+        ☀️ Mode Terang
+      </button>
+
+      <button onclick="openPortraitModal()" class="btn btn-success" title="Mode Potret Infografis Lengkap untuk WhatsApp / Simpan JPG">
+        📱 Mode Potret (JPG)
+      </button>
+
+      <a href="https://docs.google.com/spreadsheets/d/1iCLX_scRmLAMwKrjOS2FkasGwB2q8NOtfzjxxYol8Ow/edit" target="_blank" class="btn btn-outline">
+        📊 Spreadsheet
+      </a>
+      <button onclick="exportTableCSV()" class="btn btn-outline">
+        📥 CSV
+      </button>
+      <button onclick="window.print()" class="btn btn-primary">
+        🖨️ Cetak
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('overview')">
+      <span>🌟 Ringkasan Eksekutif</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('assurance')">
+      <span>🛠️ Uji Petik Assurance</span>
+      <span class="badge">91.95%</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('psb')">
+      <span>📡 Uji Petik PSB</span>
+      <span class="badge">79.79%</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('bottleneck')">
+      <span>⚠️ Analisis Saldo & Bottleneck</span>
+      <span class="badge" style="background: rgba(239,68,68,0.25); color: #f87171;">40 Saldo</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('pic')">
+      <span>👤 Leaderboard PIC Area</span>
+    </button>
+  </nav>
+
+  <!-- TAB 1: EXECUTIVE OVERVIEW -->
+  <div id="tab-overview" class="tab-content active">
+    <div class="hero-kpi-grid">
+      <div class="gauge-card">
+        <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">
+          TOTAL CAPAIAN DISTRICT BOGOR
+        </div>
+        <div class="radial-chart-wrapper">
+          <svg viewBox="0 0 190 190">
+            <circle class="radial-track" cx="95" cy="95" r="80"></circle>
+            <circle class="radial-fill" id="gauge-circle" cx="95" cy="95" r="80"></circle>
+          </svg>
+          <div class="gauge-center-text">
+            <div class="gauge-percentage">88.7%</div>
+            <div class="gauge-label">TARGET 100%</div>
+          </div>
+        </div>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+          Realisasi: <strong style="color: var(--success);">315</strong> dari <strong>355</strong> Sampling
+        </div>
+      </div>
+
+      <div class="stat-cards-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Target Sampling</span>
+            <div class="stat-card-icon" style="background: var(--primary-glow); color: var(--primary);">🎯</div>
+          </div>
+          <div>
+            <div class="stat-val">355</div>
+            <div class="stat-subtext">
+              <span>Assurance: <strong>261</strong></span>
+              <span>PSB: <strong>94</strong></span>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill" style="width: 100%; background: var(--primary);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Realisasi Selesai</span>
+            <div class="stat-card-icon" style="background: var(--success-glow); color: var(--success);">✅</div>
+          </div>
+          <div>
+            <div class="stat-val" style="color: var(--success);">315</div>
+            <div class="stat-subtext">
+              <span>Assurance: <strong>240</strong></span>
+              <span>PSB: <strong>75</strong></span>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill" style="width: 88.7%; background: var(--success);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Sisa Saldo Belum</span>
+            <div class="stat-card-icon" style="background: var(--danger-glow); color: var(--danger);">⏳</div>
+          </div>
+          <div>
+            <div class="stat-val" style="color: var(--danger);">40</div>
+            <div class="stat-subtext">
+              <span>Assurance: <strong>21</strong></span>
+              <span>PSB: <strong>19</strong></span>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill" style="width: 11.3%; background: var(--danger);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Kualitas Uji (OK)</span>
+            <div class="stat-card-icon" style="background: rgba(139,92,246,0.15); color: var(--accent);">⭐</div>
+          </div>
+          <div>
+            <div class="stat-val" style="color: var(--accent);">100%</div>
+            <div class="stat-subtext">
+              <span>0 Temuan NOK</span>
+              <span style="color: var(--success); font-weight: 700;">Standard Sesuai</span>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill" style="width: 100%; background: var(--accent);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner">
+      <div class="alert-left">
+        <div class="alert-icon-box">🚨</div>
+        <div class="alert-text">
+          <h4>Fokus Intervensi: Wilayah Sukabumi & Cibadak Menyumbang 82.5% Saldo Tertinggal!</h4>
+          <p>Dari total <strong>40 saldo</strong> tersisa di District Bogor, <strong>33 saldo</strong> berada di Sektor <strong>Cibadak</strong> dan <strong>Sukabumi</strong>. Segera tindak lanjuti sebelum cut-off operasional.</p>
+        </div>
+      </div>
+      <button onclick="switchTab('bottleneck')" class="btn btn-outline" style="flex-shrink: 0;">
+        Lihat Rincian PIC →
+      </button>
+    </div>
+
+    <!-- COMPARISON CHARTS -->
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">
+          <span>📊 Perbandingan Pencapaian Stream</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Target : 100%</span>
+        </div>
+        <div id="chart-stream-bars"></div>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-title">
+          <span>🏛️ Rekap Uji Petik Assurance per Area</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">4 Area Regional</span>
+        </div>
+        <div id="chart-area-bars"></div>
+      </div>
+    </div>
+
+    <!-- PSB SA MATRIX -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📡 Matriks Kinerja 12 Service Area (SA) — Uji Petik PSB</div>
+          <div class="panel-subtitle">Status penyelesaian sampling pasang sambungan baru per wilayah service area</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span class="badge badge-success">8 SA Selesai (100%)</span>
+          <span class="badge badge-danger">4 SA Tertinggal</span>
+        </div>
+      </div>
+      <div class="sa-matrix-grid" id="sa-matrix-container"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: UJI PETIK ASSURANCE -->
+  <div id="tab-assurance" class="tab-content">
+    <div class="area-scorecards-grid">
+      <div class="area-scorecard">
+        <div class="area-card-top">
+          <span class="area-name">Area CIBINONG</span>
+          <span class="area-pct" style="color: var(--success);">98.51%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>67</strong> • Done: <strong>66</strong></div>
+        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 1 Order</div>
+      </div>
+
+      <div class="area-scorecard">
+        <div class="area-card-top">
+          <span class="area-name">Area KUJANG</span>
+          <span class="area-pct" style="color: var(--success);">96.15%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>104</strong> • Done: <strong>100</strong></div>
+        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 4 Order</div>
+      </div>
+
+      <div class="area-scorecard">
+        <div class="area-card-top">
+          <span class="area-name">Area SENTUL</span>
+          <span class="area-pct" style="color: var(--success);">96.00%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>50</strong> • Done: <strong>48</strong></div>
+        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 2 Order</div>
+      </div>
+
+      <div class="area-scorecard" style="border-left: 4px solid var(--danger);">
+        <div class="area-card-top">
+          <span class="area-name" style="color: var(--danger);">Area SUKABUMI</span>
+          <span class="area-pct" style="color: var(--danger);">65.00%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>40</strong> • Done: <strong>26</strong></div>
+        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 800;">Sisa Saldo: 14 Order (Kritis)</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📋 Data Rekap Uji Petik Assurance per Sektor</div>
+          <div class="panel-subtitle">23 Sektor di District Bogor dengan rincian PIC dan status eviden</div>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="search-ass" placeholder="🔍 Cari Sektor atau PIC..." class="search-input" oninput="renderAssuranceTable()">
+          <select id="filter-ass-status" class="select-input" onchange="renderAssuranceTable()">
+            <option value="ALL">Semua Status</option>
+            <option value="SALDO">Memiliki Sisa Saldo</option>
+            <option value="DONE">Selesai 100%</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Sektor</th>
+              <th>PIC Area</th>
+              <th class="num-col">Sampling</th>
+              <th class="num-col">Done</th>
+              <th class="num-col">Saldo</th>
+              <th>Progress Ach</th>
+              <th class="num-col">% Ach</th>
+              <th>Status Uji</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-assurance"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: UJI PETIK PSB -->
+  <div id="tab-psb" class="tab-content">
+    <div class="stat-cards-grid" style="margin-bottom: 24px;">
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-card-title">Target PSB</span><span>📡</span></div>
+        <div class="stat-val">94</div>
+        <div class="stat-subtext">Total 34 STO di District Bogor</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-card-title">Done PSB</span><span>✅</span></div>
+        <div class="stat-val" style="color: var(--success);">75</div>
+        <div class="stat-subtext">Capaian: 79.79%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-card-title">Saldo PSB</span><span>⏳</span></div>
+        <div class="stat-val" style="color: var(--danger);">19</div>
+        <div class="stat-subtext">Terpusat di Sukabumi & Cibadak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><span class="stat-card-title">Kualitas QC</span><span>⭐</span></div>
+        <div class="stat-val" style="color: var(--accent);">100%</div>
+        <div class="stat-subtext">0 NOK dilaporkan</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📋 Data Monitoring Uji Petik PSB per STO</div>
+          <div class="panel-subtitle">Rincian 34 STO beserta Service Area (SA) dan PIC</div>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="search-psb" placeholder="🔍 Cari STO, SA, atau PIC..." class="search-input" oninput="renderPSBTable()">
+          <select id="filter-psb-sa" class="select-input" onchange="renderPSBTable()">
+            <option value="ALL">Semua Service Area (SA)</option>
+          </select>
+          <select id="filter-psb-status" class="select-input" onchange="renderPSBTable()">
+            <option value="ALL">Semua Status</option>
+            <option value="SALDO">Memiliki Sisa Saldo</option>
+            <option value="DONE">Selesai 100%</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>STO</th>
+              <th>Service Area (SA)</th>
+              <th>PIC Area</th>
+              <th class="num-col">Sampling</th>
+              <th class="num-col">Done</th>
+              <th class="num-col">Saldo</th>
+              <th>Progress QC</th>
+              <th class="num-col">% QC</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-psb"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: BOTTLENECK -->
+  <div id="tab-bottleneck" class="tab-content">
+    <div class="alert-banner">
+      <div class="alert-left">
+        <div class="alert-icon-box">🚨</div>
+        <div class="alert-text">
+          <h4>Rangkuman Bottleneck & Rekomendasi Tindak Lanjut Cepat</h4>
+          <p>Terdapat 7 PIC yang memiliki sisa saldo pekerjaan. Prioritas utama ada pada 3 PIC dengan saldo terbesar (32 dari 40 saldo total). Lakukan koordinasi lapangan segera.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottleneck-grid" id="bottleneck-cards-container"></div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">🎯 Matriks Rekomendasi Tindakan Lapangan</div>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Prioritas</th>
+              <th>Wilayah / Sektor</th>
+              <th>Stream</th>
+              <th>PIC Area</th>
+              <th>Sisa Saldo</th>
+              <th>Kendala Terindikasi</th>
+              <th>Tindakan Rekomendasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-danger">P1 - CRITICAL</span></td>
+              <td><strong>SEKTOR CIBADAK</strong></td>
+              <td>Assurance</td>
+              <td>ERWIN PERMANA (885959)</td>
+              <td class="num-col"><strong style="color:var(--danger);">12</strong></td>
+              <td>Eviden tertahan proses / sampling lapangan lambat</td>
+              <td>Supervisi langsung Team Leader; dispatch teknisi pendamping sampling hari ini.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-danger">P1 - CRITICAL</span></td>
+              <td><strong>SA SUKABUMI (STO SKB)</strong></td>
+              <td>PSB</td>
+              <td>FAUZAN ADZIMA (16860876)</td>
+              <td class="num-col"><strong style="color:var(--danger);">7</strong></td>
+              <td>Volume PSB tinggi (299 PS) namun sampling baru 3 dari 10</td>
+              <td>Jadwalkan uji petik PSB maraton untuk 7 order sisa sebelum cut-off.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-danger">P1 - CRITICAL</span></td>
+              <td><strong>SA CIBADAK (CBD & CCR)</strong></td>
+              <td>PSB</td>
+              <td>JANUAR FADLILLAH (16911813)</td>
+              <td class="num-col"><strong style="color:var(--danger);">8</strong></td>
+              <td>STO CBD saldo 5, CCR saldo 2, KLU saldo 1</td>
+              <td>Bagi penugasan sampling STO Cibadak & Cicurug ke teknisi quality control terdekat.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-warning">P2 - MEDIUM</span></td>
+              <td><strong>SUKABUMI 2</strong></td>
+              <td>Assurance</td>
+              <td>RIZKI NOVIANDY FAJAR</td>
+              <td class="num-col"><strong style="color:var(--warning);">2</strong></td>
+              <td>Upload eviden proses approval</td>
+              <td>Approval eviden segera di sistem oleh TL / Manager.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-warning">P2 - MEDIUM</span></td>
+              <td><strong>DRAMAGA & SENTUL</strong></td>
+              <td>Assurance & PSB</td>
+              <td>RIFQI AL AMIN, DENI LESMANA, DEDENG W.</td>
+              <td class="num-col"><strong style="color:var(--warning);">6</strong></td>
+              <td>Masing-masing saldo 1-2 sampling</td>
+              <td>Closing 100% dalam 1x24 jam untuk mencapai target zero defect.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: PIC LEADERBOARD -->
+  <div id="tab-pic" class="tab-content">
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">🏆 Performa & Beban Kerja PIC Area</div>
+          <div class="panel-subtitle">Rekap gabungan penugasan Assurance dan PSB per PIC Area</div>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="search-pic" placeholder="🔍 Cari nama PIC..." class="search-input" oninput="renderPICTable()">
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Nama PIC Area</th>
+              <th class="num-col">Total Target</th>
+              <th class="num-col">Total Selesai</th>
+              <th class="num-col">Sisa Saldo</th>
+              <th>Tingkat Penyelesaian</th>
+              <th class="num-col">% Ach Gabungan</th>
+              <th>Status Performa</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-pic"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Dashboard Monitoring Uji Petik Assurance & PSB • TELKOM DISTRICT BOGOR DAN SUKABUMI</p>
+    <p style="margin-top: 4px;">Data terintegrasi otomatis dari <a href="https://docs.google.com/spreadsheets/d/1iCLX_scRmLAMwKrjOS2FkasGwB2q8NOtfzjxxYol8Ow/edit" target="_blank">Google Spreadsheet</a></p>
+  </footer>
+</div>
+
+<!-- ==================================================== -->
+<!-- PORTRAIT PREVIEW & EXPORT MODAL                     -->
+<!-- ==================================================== -->
+<div id="portrait-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 24px;">📱</span>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);">Mode Potret Infografis (Siap Simpan JPG)</h3>
+          <div style="font-size: 12px; color: var(--text-muted);">Pilih data yang ingin diekspor ke gambar vertikal resolusi tinggi:</div>
+        </div>
+      </div>
+      
+      <!-- VIEW SELECTOR BUTTONS -->
+      <div class="portrait-view-selector">
+        <button id="pview-psb" onclick="selectPortraitView('psb')" class="portrait-view-btn">
+          📡 Uji Petik PSB (34 STO)
+        </button>
+        <button id="pview-assurance" onclick="selectPortraitView('assurance')" class="portrait-view-btn">
+          🛠️ Assurance (23 Sektor)
+        </button>
+        <button id="pview-overview" onclick="selectPortraitView('overview')" class="portrait-view-btn">
+          🌟 Ringkasan Eksekutif
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button onclick="downloadPortraitJPG()" id="btn-save-jpg" class="btn btn-success">
+          💾 Download JPG Sekarang
+        </button>
+        <button onclick="closePortraitModal()" class="btn btn-outline">
+          ✕ Tutup
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- THE CAPTURE TARGET -->
+      <div id="portrait-canvas-target">
+        <!-- DYNAMICALLY INJECTED VIA JS: PSB, ASSURANCE, OR OVERVIEW -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  "meta": {
+    "title": "DASHBOARD MONITORING UJI PETIK DISTRICT BOGOR",
+    "district": "BOGOR",
+    "regional": "EASTERN JABOTABEK",
+    "generated_at": "2026-11-25 09:14:40",
+    "source_spreadsheet": "https://docs.google.com/spreadsheets/d/1iCLX_scRmLAMwKrjOS2FkasGwB2q8NOtfzjxxYol8Ow/edit"
+  },
+  "assurance": {
+    "total": {
+      "sampling": 261,
+      "saldo": 21,
+      "done": 240,
+      "ach": 91.95
+    },
+    "groups": [
+      {
+        "name": "CIBINONG",
+        "sampling": 67,
+        "saldo": 1,
+        "done": 66,
+        "ach": 98.51
+      },
+      {
+        "name": "KUJANG",
+        "sampling": 104,
+        "saldo": 4,
+        "done": 100,
+        "ach": 96.15
+      },
+      {
+        "name": "SENTUL",
+        "sampling": 50,
+        "saldo": 2,
+        "done": 48,
+        "ach": 96.0
+      },
+      {
+        "name": "SUKABUMI",
+        "sampling": 40,
+        "saldo": 14,
+        "done": 26,
+        "ach": 65.0
+      }
+    ],
+    "sektors": [
+      {
+        "row": 5,
+        "label": "1.0",
+        "sektor": "SEKTOR - BOGOR - BOJONG GEDE",
+        "pic": "ANDI MAULANA|19910215",
+        "sampling": 13,
+        "saldo": 0,
+        "done": 13,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 6,
+        "label": "2.0",
+        "sektor": "SEKTOR - BOGOR - CIANGSANA",
+        "pic": "ABDUL ROHMAN|18940240",
+        "sampling": 11,
+        "saldo": 0,
+        "done": 11,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 7,
+        "label": "3.0",
+        "sektor": "SEKTOR - BOGOR - CIBINONG 1",
+        "pic": "ANDI MAULANA|19910215",
+        "sampling": 12,
+        "saldo": 0,
+        "done": 12,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 8,
+        "label": "4.0",
+        "sektor": "SEKTOR - BOGOR - CIBINONG 2",
+        "pic": "ANDI MAULANA|19910215",
+        "sampling": 12,
+        "saldo": 0,
+        "done": 12,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 9,
+        "label": "5.0",
+        "sektor": "SEKTOR - BOGOR - CILEUNGSI",
+        "pic": "ADI MAULANA ATMADJA|16971601",
+        "sampling": 12,
+        "saldo": 1,
+        "done": 11,
+        "ach": 91.67,
+        "is_subtotal": false
+      },
+      {
+        "row": 10,
+        "label": "6.0",
+        "sektor": "SEKTOR - BOGOR - GUNUNG PUTRI",
+        "pic": "MUSTAR|15886691",
+        "sampling": 7,
+        "saldo": 0,
+        "done": 7,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 12,
+        "label": "7.0",
+        "sektor": "SEKTOR - BOGOR - BOGOR 1",
+        "pic": "ANGGA PUTRA INDRA|20930051",
+        "sampling": 13,
+        "saldo": 0,
+        "done": 13,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 13,
+        "label": "8.0",
+        "sektor": "SEKTOR - BOGOR - BOGOR 2",
+        "pic": "ANGGA PUTRA INDRA|20930052",
+        "sampling": 12,
+        "saldo": 1,
+        "done": 11,
+        "ach": 91.67,
+        "is_subtotal": false
+      },
+      {
+        "row": 14,
+        "label": "9.0",
+        "sektor": "SEKTOR - BOGOR - BOGOR 3",
+        "pic": "ANGGA PUTRA INDRA|20930053",
+        "sampling": 11,
+        "saldo": 1,
+        "done": 10,
+        "ach": 90.91,
+        "is_subtotal": false
+      },
+      {
+        "row": 15,
+        "label": "10.0",
+        "sektor": "SEKTOR - BOGOR - BOGOR 4",
+        "pic": "ANGGA PUTRA INDRA|20930054",
+        "sampling": 10,
+        "saldo": 0,
+        "done": 10,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 16,
+        "label": "11.0",
+        "sektor": "SEKTOR - BOGOR - CIAPUS",
+        "pic": "WANDIANA|16901645",
+        "sampling": 9,
+        "saldo": 0,
+        "done": 9,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 17,
+        "label": "12.0",
+        "sektor": "SEKTOR - BOGOR - DRAMAGA",
+        "pic": "RIFQI AL AMIN DESTYADI|20920726",
+        "sampling": 14,
+        "saldo": 2,
+        "done": 12,
+        "ach": 85.71,
+        "is_subtotal": false
+      },
+      {
+        "row": 18,
+        "label": "13.0",
+        "sektor": "SEKTOR - BOGOR - PAGELARAN",
+        "pic": "WANDIANA|16901645",
+        "sampling": 10,
+        "saldo": 0,
+        "done": 10,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 19,
+        "label": "14.0",
+        "sektor": "SEKTOR - BOGOR - PARUNG",
+        "pic": "GIRI SUSENO|16932542",
+        "sampling": 13,
+        "saldo": 0,
+        "done": 13,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 20,
+        "label": "15.0",
+        "sektor": "SEKTOR - BOGOR - SEMPLAK",
+        "pic": "GIRI SUSENO|16932542",
+        "sampling": 12,
+        "saldo": 0,
+        "done": 12,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 22,
+        "label": "16.0",
+        "sektor": "SEKTOR - BOGOR - CIAWI",
+        "pic": "RIFAN MUNAWAR|16932554",
+        "sampling": 11,
+        "saldo": 0,
+        "done": 11,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 23,
+        "label": "17.0",
+        "sektor": "SEKTOR - BOGOR - CISARUA",
+        "pic": "RIFAN MUNAWAR|16932554",
+        "sampling": 10,
+        "saldo": 0,
+        "done": 10,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 24,
+        "label": "18.0",
+        "sektor": "SEKTOR - BOGOR - KEDUNG HALANG",
+        "pic": "IWAN SUPRIATNA|16750343",
+        "sampling": 10,
+        "saldo": 0,
+        "done": 10,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 25,
+        "label": "19.0",
+        "sektor": "SEKTOR - BOGOR - PASIR MAUNG",
+        "pic": "DENI LESMANA|20920044",
+        "sampling": 9,
+        "saldo": 0,
+        "done": 9,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 26,
+        "label": "20.0",
+        "sektor": "SEKTOR - BOGOR - SENTUL",
+        "pic": "DENI LESMANA|20920044",
+        "sampling": 10,
+        "saldo": 2,
+        "done": 8,
+        "ach": 80.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 28,
+        "label": "21.0",
+        "sektor": "SEKTOR - SUKABUMI - CIBADAK",
+        "pic": "ERWIN PERMANA | 885959",
+        "sampling": 15,
+        "saldo": 12,
+        "done": 3,
+        "ach": 20.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 29,
+        "label": "22.0",
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 1",
+        "pic": "RIZKI NOVIANDY FAJAR | 18920082",
+        "sampling": 13,
+        "saldo": 0,
+        "done": 13,
+        "ach": 100.0,
+        "is_subtotal": false
+      },
+      {
+        "row": 30,
+        "label": "23.0",
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 2",
+        "pic": "RIZKI NOVIANDY FAJAR | 18920082",
+        "sampling": 12,
+        "saldo": 2,
+        "done": 10,
+        "ach": 83.33,
+        "is_subtotal": false
+      }
+    ],
+    "details": [
+      {
+        "no": 1,
+        "sektor": "SEKTOR - BOGOR - BOGOR 1",
+        "data_juli": 55,
+        "jml_gaul": 0,
+        "jml_hvc": 53,
+        "sampling": 13,
+        "sudah": 13,
+        "belum": 0,
+        "ok": 13,
+        "nok": 0,
+        "dispatch_sudah": 13,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 2,
+        "sektor": "SEKTOR - BOGOR - BOGOR 2",
+        "data_juli": 36,
+        "jml_gaul": 0,
+        "jml_hvc": 32,
+        "sampling": 12,
+        "sudah": 11,
+        "belum": 1,
+        "ok": 11,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 1,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 3,
+        "sektor": "SEKTOR - BOGOR - BOGOR 3",
+        "data_juli": 34,
+        "jml_gaul": 0,
+        "jml_hvc": 33,
+        "sampling": 11,
+        "sudah": 10,
+        "belum": 1,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 11,
+        "dispatch_belum": 0,
+        "eviden_proses": 1,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 4,
+        "sektor": "SEKTOR - BOGOR - BOGOR 4",
+        "data_juli": 22,
+        "jml_gaul": 0,
+        "jml_hvc": 18,
+        "sampling": 10,
+        "sudah": 10,
+        "belum": 0,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 5,
+        "sektor": "SEKTOR - BOGOR - BOJONG GEDE",
+        "data_juli": 58,
+        "jml_gaul": 0,
+        "jml_hvc": 56,
+        "sampling": 13,
+        "sudah": 13,
+        "belum": 0,
+        "ok": 13,
+        "nok": 0,
+        "dispatch_sudah": 13,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 6,
+        "sektor": "SEKTOR - BOGOR - CIANGSANA",
+        "data_juli": 35,
+        "jml_gaul": 0,
+        "jml_hvc": 32,
+        "sampling": 11,
+        "sudah": 11,
+        "belum": 0,
+        "ok": 11,
+        "nok": 0,
+        "dispatch_sudah": 11,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 7,
+        "sektor": "SEKTOR - BOGOR - CIAPUS",
+        "data_juli": 17,
+        "jml_gaul": 0,
+        "jml_hvc": 16,
+        "sampling": 9,
+        "sudah": 9,
+        "belum": 0,
+        "ok": 9,
+        "nok": 0,
+        "dispatch_sudah": 9,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 8,
+        "sektor": "SEKTOR - BOGOR - CIAWI",
+        "data_juli": 33,
+        "jml_gaul": 0,
+        "jml_hvc": 31,
+        "sampling": 11,
+        "sudah": 11,
+        "belum": 0,
+        "ok": 11,
+        "nok": 0,
+        "dispatch_sudah": 11,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 9,
+        "sektor": "SEKTOR - BOGOR - CIBINONG 1",
+        "data_juli": 47,
+        "jml_gaul": 0,
+        "jml_hvc": 45,
+        "sampling": 12,
+        "sudah": 12,
+        "belum": 0,
+        "ok": 12,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 10,
+        "sektor": "SEKTOR - BOGOR - CIBINONG 2",
+        "data_juli": 44,
+        "jml_gaul": 0,
+        "jml_hvc": 42,
+        "sampling": 12,
+        "sudah": 12,
+        "belum": 0,
+        "ok": 12,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 11,
+        "sektor": "SEKTOR - BOGOR - CILEUNGSI",
+        "data_juli": 48,
+        "jml_gaul": 0,
+        "jml_hvc": 46,
+        "sampling": 12,
+        "sudah": 11,
+        "belum": 1,
+        "ok": 11,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 1,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 12,
+        "sektor": "SEKTOR - BOGOR - CISARUA",
+        "data_juli": 21,
+        "jml_gaul": 0,
+        "jml_hvc": 17,
+        "sampling": 10,
+        "sudah": 10,
+        "belum": 0,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 13,
+        "sektor": "SEKTOR - BOGOR - DRAMAGA",
+        "data_juli": 77,
+        "jml_gaul": 0,
+        "jml_hvc": 74,
+        "sampling": 14,
+        "sudah": 12,
+        "belum": 2,
+        "ok": 12,
+        "nok": 0,
+        "dispatch_sudah": 14,
+        "dispatch_belum": 0,
+        "eviden_proses": 2,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 14,
+        "sektor": "SEKTOR - BOGOR - GUNUNG PUTRI",
+        "data_juli": 11,
+        "jml_gaul": 0,
+        "jml_hvc": 11,
+        "sampling": 7,
+        "sudah": 7,
+        "belum": 0,
+        "ok": 7,
+        "nok": 0,
+        "dispatch_sudah": 7,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 15,
+        "sektor": "SEKTOR - BOGOR - KEDUNG HALANG",
+        "data_juli": 24,
+        "jml_gaul": 1,
+        "jml_hvc": 22,
+        "sampling": 10,
+        "sudah": 10,
+        "belum": 0,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 16,
+        "sektor": "SEKTOR - BOGOR - PAGELARAN",
+        "data_juli": 24,
+        "jml_gaul": 0,
+        "jml_hvc": 21,
+        "sampling": 10,
+        "sudah": 10,
+        "belum": 0,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 17,
+        "sektor": "SEKTOR - BOGOR - PARUNG",
+        "data_juli": 53,
+        "jml_gaul": 0,
+        "jml_hvc": 46,
+        "sampling": 13,
+        "sudah": 13,
+        "belum": 0,
+        "ok": 13,
+        "nok": 0,
+        "dispatch_sudah": 13,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 18,
+        "sektor": "SEKTOR - BOGOR - PASIR MAUNG",
+        "data_juli": 18,
+        "jml_gaul": 0,
+        "jml_hvc": 15,
+        "sampling": 9,
+        "sudah": 9,
+        "belum": 0,
+        "ok": 9,
+        "nok": 0,
+        "dispatch_sudah": 9,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 19,
+        "sektor": "SEKTOR - BOGOR - SEMPLAK",
+        "data_juli": 47,
+        "jml_gaul": 0,
+        "jml_hvc": 44,
+        "sampling": 12,
+        "sudah": 12,
+        "belum": 0,
+        "ok": 12,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 20,
+        "sektor": "SEKTOR - BOGOR - SENTUL",
+        "data_juli": 24,
+        "jml_gaul": 0,
+        "jml_hvc": 20,
+        "sampling": 10,
+        "sudah": 8,
+        "belum": 2,
+        "ok": 8,
+        "nok": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 2,
+        "status": "BELUM"
+      },
+      {
+        "no": 21,
+        "sektor": "SEKTOR - SUKABUMI - CIBADAK",
+        "data_juli": 116,
+        "jml_gaul": 0,
+        "jml_hvc": 105,
+        "sampling": 15,
+        "sudah": 3,
+        "belum": 12,
+        "ok": 3,
+        "nok": 0,
+        "dispatch_sudah": 15,
+        "dispatch_belum": 0,
+        "eviden_proses": 12,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 22,
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 1",
+        "data_juli": 55,
+        "jml_gaul": 0,
+        "jml_hvc": 47,
+        "sampling": 13,
+        "sudah": 13,
+        "belum": 0,
+        "ok": 13,
+        "nok": 0,
+        "dispatch_sudah": 13,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 23,
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 2",
+        "data_juli": 43,
+        "jml_gaul": 0,
+        "jml_hvc": 38,
+        "sampling": 12,
+        "sudah": 10,
+        "belum": 2,
+        "ok": 10,
+        "nok": 0,
+        "dispatch_sudah": 12,
+        "dispatch_belum": 0,
+        "eviden_proses": 2,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 24,
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 1",
+        "data_juli": 115,
+        "jml_gaul": 0,
+        "jml_hvc": 105,
+        "sampling": 15,
+        "sudah": 0,
+        "belum": 15,
+        "ok": 0,
+        "nok": 0,
+        "dispatch_sudah": 15,
+        "dispatch_belum": 0,
+        "eviden_proses": 15,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      },
+      {
+        "no": 23,
+        "sektor": "SEKTOR - SUKABUMI - SUKABUMI 2",
+        "data_juli": 111,
+        "jml_gaul": 0,
+        "jml_hvc": 94,
+        "sampling": 14,
+        "sudah": 0,
+        "belum": 14,
+        "ok": 0,
+        "nok": 0,
+        "dispatch_sudah": 14,
+        "dispatch_belum": 0,
+        "eviden_proses": 14,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "status": "BELUM"
+      }
+    ]
+  },
+  "psb": {
+    "total": {
+      "sampling": 94,
+      "saldo": 19,
+      "done": 75,
+      "ach": 79.79
+    },
+    "sa_summary": [
+      {
+        "sa": "BOGOR",
+        "sampling": 5,
+        "done": 5,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "CIAPUS - PAGELARAN",
+        "sampling": 4,
+        "done": 4,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "CIAWI - CISARUA",
+        "sampling": 13,
+        "done": 13,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "CIBADAK",
+        "sampling": 15,
+        "done": 7,
+        "saldo": 8,
+        "qc": 46.67,
+        "ach": 46.67
+      },
+      {
+        "sa": "CIBINONG",
+        "sampling": 11,
+        "done": 11,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "CILEUNGSI",
+        "sampling": 8,
+        "done": 8,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "DRAMAGA",
+        "sampling": 10,
+        "done": 8,
+        "saldo": 2,
+        "qc": 80.0,
+        "ach": 80.0
+      },
+      {
+        "sa": "GUNUNG PUTRI - CIANGSANA",
+        "sampling": 4,
+        "done": 3,
+        "saldo": 1,
+        "qc": 75.0,
+        "ach": 75.0
+      },
+      {
+        "sa": "KEDUNG HALANG",
+        "sampling": 3,
+        "done": 3,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "PARUNG - SEMPLAK",
+        "sampling": 9,
+        "done": 9,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "PASIR MAUNG",
+        "sampling": 4,
+        "done": 4,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "sa": "SUKABUMI",
+        "sampling": 11,
+        "done": 3,
+        "saldo": 8,
+        "qc": 27.27,
+        "ach": 27.27
+      }
+    ],
+    "sto_list": [
+      {
+        "no": 1,
+        "sa": "CIBINONG",
+        "pic": "ROBI ALDI - 25970026",
+        "sto": "BJD",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 2,
+        "sa": "BOGOR",
+        "pic": "RICKY FIRMANSYAH - 20930053",
+        "sto": "BOO",
+        "sampling": 5,
+        "done": 5,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 3,
+        "sa": "CILEUNGSI",
+        "pic": "ADI MAULANA ATMADJA - 16971601",
+        "sto": "CAU",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 4,
+        "sa": "CIBADAK",
+        "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
+        "sto": "CBD",
+        "sampling": 6,
+        "done": 1,
+        "saldo": 5,
+        "qc": 16.67,
+        "ach": 16.67
+      },
+      {
+        "no": 5,
+        "sa": "CIBINONG",
+        "pic": "ROBI ALDI - 25970026",
+        "sto": "CBI",
+        "sampling": 8,
+        "done": 8,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 6,
+        "sa": "CIBADAK",
+        "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
+        "sto": "CCR",
+        "sampling": 2,
+        "done": 0,
+        "saldo": 2,
+        "qc": 0.0,
+        "ach": 0.0
+      },
+      {
+        "no": 7,
+        "sa": "DRAMAGA",
+        "pic": "DEDENG WAHYUDIN - 20930815",
+        "sto": "CGD",
+        "sampling": 1,
+        "done": 0,
+        "saldo": 1,
+        "qc": 0.0,
+        "ach": 0.0
+      },
+      {
+        "no": 8,
+        "sa": "CIAWI - CISARUA",
+        "pic": "ABDUL AZIS - 16953899",
+        "sto": "CJU",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 9,
+        "sa": "CIBADAK",
+        "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
+        "sto": "CKB",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 10,
+        "sa": "CILEUNGSI",
+        "pic": "ADI MAULANA ATMADJA - 16971601",
+        "sto": "CLS",
+        "sampling": 5,
+        "done": 5,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 11,
+        "sa": "SUKABUMI",
+        "pic": "FAUZAN ADZIMA - 16860876",
+        "sto": "CMO",
+        "sampling": 1,
+        "done": 0,
+        "saldo": 1,
+        "qc": 0.0,
+        "ach": 0.0
+      },
+      {
+        "no": 12,
+        "sa": "CIAPUS - PAGELARAN",
+        "pic": "WAHYU MAULANA - 16932541",
+        "sto": "CPS",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 13,
+        "sa": "CIAWI - CISARUA",
+        "pic": "ABDUL AZIS - 16953899",
+        "sto": "CRI",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 14,
+        "sa": "PARUNG - SEMPLAK",
+        "pic": "HERI HERYANTO - 16881055",
+        "sto": "CSE",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 15,
+        "sa": "GUNUNG PUTRI - CIANGSANA",
+        "pic": "MUSTAR - 15886691",
+        "sto": "CSN",
+        "sampling": 3,
+        "done": 2,
+        "saldo": 1,
+        "qc": 66.67,
+        "ach": 66.67
+      },
+      {
+        "no": 16,
+        "sa": "CIAWI - CISARUA",
+        "pic": "ABDUL AZIS - 16953899",
+        "sto": "CSR",
+        "sampling": 6,
+        "done": 6,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 17,
+        "sa": "PASIR MAUNG",
+        "pic": "WAHYU HIDAYAT - 16932553",
+        "sto": "CTR",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 18,
+        "sa": "CIAWI - CISARUA",
+        "pic": "ABDUL AZIS - 16953899",
+        "sto": "CWI",
+        "sampling": 4,
+        "done": 4,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 19,
+        "sa": "DRAMAGA",
+        "pic": "DEDENG WAHYUDIN - 20930815",
+        "sto": "DMG",
+        "sampling": 4,
+        "done": 4,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 20,
+        "sa": "GUNUNG PUTRI - CIANGSANA",
+        "pic": "MUSTAR - 15886691",
+        "sto": "GPI",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 21,
+        "sa": "CILEUNGSI",
+        "pic": "ADI MAULANA ATMADJA - 16971601",
+        "sto": "JGL",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 22,
+        "sa": "CIBADAK",
+        "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
+        "sto": "JPK",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 23,
+        "sa": "DRAMAGA",
+        "pic": "DEDENG WAHYUDIN - 20930815",
+        "sto": "JSA",
+        "sampling": 1,
+        "done": 0,
+        "saldo": 1,
+        "qc": 0.0,
+        "ach": 0.0
+      },
+      {
+        "no": 24,
+        "sa": "KEDUNG HALANG",
+        "pic": "IWAN SUPRIATNA - 16750343",
+        "sto": "KHL",
+        "sampling": 3,
+        "done": 3,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 25,
+        "sa": "CIBADAK",
+        "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
+        "sto": "KLU",
+        "sampling": 2,
+        "done": 1,
+        "saldo": 1,
+        "qc": 50.0,
+        "ach": 50.0
+      },
+      {
+        "no": 26,
+        "sa": "DRAMAGA",
+        "pic": "ADI MAULANA ATMADJA - 16971601",
+        "sto": "LWL",
+        "sampling": 4,
+        "done": 4,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 27,
+        "sa": "CIAPUS - PAGELARAN",
+        "pic": "WAHYU MAULANA - 16932541",
+        "sto": "PAG",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 28,
+        "sa": "PARUNG - SEMPLAK",
+        "pic": "HERI HERYANTO - 16881055",
+        "sto": "PAR",
+        "sampling": 3,
+        "done": 3,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 29,
+        "sa": "CIBADAK",
+        "pic": "WALUYO - 16760321",
+        "sto": "PLR",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 30,
+        "sa": "PASIR MAUNG",
+        "pic": "WAHYU HIDAYAT - 16932553",
+        "sto": "PMU",
+        "sampling": 2,
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 31,
+        "sa": "SUKABUMI",
+        "pic": "FAUZAN ADZIMA - 16860876",
+        "sto": "SKB",
+        "sampling": 10,
+        "done": 3,
+        "saldo": 7,
+        "qc": 30.0,
+        "ach": 30.0
+      },
+      {
+        "no": 32,
+        "sa": "PARUNG - SEMPLAK",
+        "pic": "GIRI SUSENO - 16932542",
+        "sto": "SPL",
+        "sampling": 5,
+        "done": 5,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 33,
+        "sa": "PASIR MAUNG",
+        "pic": "WAHYU HIDAYAT - 16932553",
+        "sto": "STL",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      },
+      {
+        "no": 34,
+        "sa": "CIBINONG",
+        "pic": "ROBI ALDI - 25970026",
+        "sto": "TJH",
+        "sampling": 1,
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
+      }
+    ],
+    "details": [
+      {
+        "no": 1,
+        "sto": "BJD",
+        "populasi_sept": 75,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 2,
+        "sto": "BOO",
+        "populasi_sept": 333,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 5,
+        "sudah": 5,
+        "belum": 0,
+        "ok": 5,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 5,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 3,
+        "sto": "CAU",
+        "populasi_sept": 17,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 4,
+        "sto": "CBD",
+        "populasi_sept": 172,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 6,
+        "sudah": 1,
+        "belum": 5,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 6,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 16.67,
+        "pct_ok": 16.67,
+        "status": "BELUM"
+      },
+      {
+        "no": 5,
+        "sto": "CBI",
+        "populasi_sept": 231,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 8,
+        "sudah": 8,
+        "belum": 0,
+        "ok": 8,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 8,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 6,
+        "sto": "CCR",
+        "populasi_sept": 65,
+        "undspec": 0,
+        "ffg": 1,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 0,
+        "belum": 2,
+        "ok": 0,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 0.0,
+        "pct_ok": 0.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 7,
+        "sto": "CGD",
+        "populasi_sept": 21,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 0,
+        "belum": 1,
+        "ok": 0,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 0.0,
+        "pct_ok": 0.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 8,
+        "sto": "CJU",
+        "populasi_sept": 19,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 9,
+        "sto": "CKB",
+        "populasi_sept": 26,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 10,
+        "sto": "CLS",
+        "populasi_sept": 154,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 5,
+        "sudah": 5,
+        "belum": 0,
+        "ok": 5,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 5,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 11,
+        "sto": "CMO",
+        "populasi_sept": 25,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 0,
+        "belum": 1,
+        "ok": 0,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 0.0,
+        "pct_ok": 0.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 12,
+        "sto": "CPS",
+        "populasi_sept": 60,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 13,
+        "sto": "CRI",
+        "populasi_sept": 61,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 14,
+        "sto": "CSE",
+        "populasi_sept": 22,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 15,
+        "sto": "CSN",
+        "populasi_sept": 78,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 3,
+        "sudah": 2,
+        "belum": 1,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 3,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 1,
+        "pct_ujipetik": 66.67,
+        "pct_ok": 66.67,
+        "status": "BELUM"
+      },
+      {
+        "no": 16,
+        "sto": "CSR",
+        "populasi_sept": 193,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 6,
+        "sudah": 6,
+        "belum": 0,
+        "ok": 6,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 6,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 17,
+        "sto": "CTR",
+        "populasi_sept": 24,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 18,
+        "sto": "CWI",
+        "populasi_sept": 117,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 4,
+        "sudah": 4,
+        "belum": 0,
+        "ok": 4,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 4,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 19,
+        "sto": "DMG",
+        "populasi_sept": 114,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 4,
+        "sudah": 4,
+        "belum": 0,
+        "ok": 4,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 4,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 20,
+        "sto": "GPI",
+        "populasi_sept": 26,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 21,
+        "sto": "JGL",
+        "populasi_sept": 47,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 22,
+        "sto": "JPK",
+        "populasi_sept": 67,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 23,
+        "sto": "JSA",
+        "populasi_sept": 29,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 0,
+        "belum": 1,
+        "ok": 0,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 0.0,
+        "pct_ok": 0.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 24,
+        "sto": "KHL",
+        "populasi_sept": 92,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 3,
+        "sudah": 3,
+        "belum": 0,
+        "ok": 3,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 3,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 25,
+        "sto": "KLU",
+        "populasi_sept": 51,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 1,
+        "belum": 1,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 50.0,
+        "pct_ok": 50.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 26,
+        "sto": "LWL",
+        "populasi_sept": 120,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 4,
+        "sudah": 4,
+        "belum": 0,
+        "ok": 4,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 4,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 27,
+        "sto": "PAG",
+        "populasi_sept": 47,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 28,
+        "sto": "PAR",
+        "populasi_sept": 83,
+        "undspec": 0,
+        "ffg": 1,
+        "hvc": 0,
+        "sampling": 3,
+        "sudah": 3,
+        "belum": 0,
+        "ok": 3,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 3,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 29,
+        "sto": "PLR",
+        "populasi_sept": 48,
+        "undspec": 0,
+        "ffg": 1,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 30,
+        "sto": "PMU",
+        "populasi_sept": 57,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 2,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 2,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 31,
+        "sto": "SKB",
+        "populasi_sept": 299,
+        "undspec": 0,
+        "ffg": 1,
+        "hvc": 0,
+        "sampling": 10,
+        "sudah": 3,
+        "belum": 7,
+        "ok": 3,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 10,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 1,
+        "pct_ujipetik": 30.0,
+        "pct_ok": 30.0,
+        "status": "BELUM"
+      },
+      {
+        "no": 32,
+        "sto": "SPL",
+        "populasi_sept": 140,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 5,
+        "sudah": 5,
+        "belum": 0,
+        "ok": 5,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 5,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 33,
+        "sto": "STL",
+        "populasi_sept": 32,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      },
+      {
+        "no": 34,
+        "sto": "TJH",
+        "populasi_sept": 22,
+        "undspec": 0,
+        "ffg": 0,
+        "hvc": 0,
+        "sampling": 1,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
+        "nok_hvc": 0,
+        "nok_total": 0,
+        "nok_history": 0,
+        "dispatch_sudah": 1,
+        "dispatch_belum": 0,
+        "eviden_proses": 0,
+        "eviden_belum_appr": 0,
+        "eviden_return": 0,
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
+      }
+    ]
+  }
+};
+let currentTab = 'overview';
+let activePortraitView = 'overview';
+
+// THEME MANAGEMENT (DARK / LIGHT)
+function initTheme() {
+  const savedTheme = localStorage.getItem('uji_petik_theme') || 'dark';
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    updateThemeButton(true);
+  } else {
+    document.body.classList.remove('light-theme');
+    updateThemeButton(false);
+  }
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-theme');
+  localStorage.setItem('uji_petik_theme', isLight ? 'light' : 'dark');
+  updateThemeButton(isLight);
+}
+
+function updateThemeButton(isLight) {
+  const btn = document.getElementById('btn-theme');
+  if (isLight) {
+    btn.innerHTML = '🌙 Mode Gelap';
+    btn.title = 'Beralih ke tampilan gelap';
+  } else {
+    btn.innerHTML = '☀️ Mode Terang';
+    btn.title = 'Beralih ke tampilan terang';
+  }
+}
+
+// TAB SWITCHING
+function switchTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  
+  const target = document.getElementById('tab-' + tabId);
+  if (target) target.classList.add('active');
+  
+  const tabs = document.querySelectorAll('.nav-tab');
+  const indexMap = {'overview': 0, 'assurance': 1, 'psb': 2, 'bottleneck': 3, 'pic': 4};
+  if (tabs[indexMap[tabId]]) {
+    tabs[indexMap[tabId]].classList.add('active');
+  }
+}
+
+// PORTRAIT MODAL & JPG CAPTURE
+function openPortraitModal() {
+  if (currentTab === 'psb') {
+    selectPortraitView('psb');
+  } else if (currentTab === 'assurance') {
+    selectPortraitView('assurance');
+  } else {
+    selectPortraitView('overview');
+  }
+  document.getElementById('portrait-modal').classList.add('active');
+}
+
+function closePortraitModal() {
+  document.getElementById('portrait-modal').classList.remove('active');
+}
+
+function selectPortraitView(viewType) {
+  activePortraitView = viewType;
+  document.querySelectorAll('.portrait-view-btn').forEach(btn => btn.classList.remove('active'));
+  const btn = document.getElementById('pview-' + viewType);
+  if (btn) btn.classList.add('active');
+
+  const container = document.getElementById('portrait-canvas-target');
+
+  if (viewType === 'psb') {
+    renderPSBPortrait(container);
+  } else if (viewType === 'assurance') {
+    renderAssurancePortrait(container);
+  } else {
+    renderOverviewPortrait(container);
+  }
+}
+
+// COMMON EXECUTIVE SUMMARY BANNER (FOTO KE-2: 4 KPI TILES + PROGRESS CAPAIAN PER STREAM)
+function getExecutiveBannerHtml() {
+  return `
+    <!-- 4 KPI TILES -->
+    <div class="portrait-stat-grid">
+      <div class="portrait-stat-item">
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">TARGET</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); margin-top: 3px;">355</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass 261 • PSB 94</div>
+      </div>
+      <div class="portrait-stat-item">
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">DONE</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--success); margin-top: 3px;">315</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Tercapai 88.7%</div>
+      </div>
+      <div class="portrait-stat-item">
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">SALDO</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--danger); margin-top: 3px;">40</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass 21 • PSB 19</div>
+      </div>
+      <div class="portrait-stat-item">
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">% ACH</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 3px;">88.7%</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">QC OK: 100%</div>
+      </div>
+    </div>
+
+    <!-- PROGRESS CAPAIAN PER STREAM -->
+    <div class="portrait-section" style="margin-top: 14px; margin-bottom: 20px;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <span>📊 Progress Capaian per Stream</span>
+        <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
+      </div>
+      <div class="bar-row" style="margin-bottom: 10px;">
+        <div class="bar-label" style="width: 155px;"><strong>Assurance (23 Sektor)</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 91.95%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">91.95%</div>
+        </div>
+        <div class="bar-value">240/261</div>
+      </div>
+      <div class="bar-row" style="margin-bottom: 2px;">
+        <div class="bar-label" style="width: 155px;"><strong>PSB (34 STO)</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 79.79%; background: linear-gradient(90deg, #10b981, #34d399);">79.79%</div>
+        </div>
+        <div class="bar-value">75/94</div>
+      </div>
+    </div>
+  `;
+}
+
+// RENDER FULL PSB PORTRAIT (ALL 34 STO) WITH FOTO KE-2 HEADER
+function renderPSBPortrait(container) {
+  let rowsHtml = '';
+  DATA.psb.sto_list.forEach((item, idx) => {
+    const isDone = item.saldo === 0;
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+    const numColor = item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)';
+    const pctColor = isDone ? 'var(--success)' : (item.qc >= 50 ? 'var(--warning)' : 'var(--danger)');
+
+    rowsHtml += `
+      <tr>
+        <td class="num-col" style="color: var(--text-dim);">${idx + 1}</td>
+        <td><strong style="color: var(--primary); font-size: 13px;">${item.sto}</strong></td>
+        <td><strong>${item.sa}</strong></td>
+        <td><span style="font-size: 11px; color: var(--text-muted);">${item.pic}</span></td>
+        <td class="num-col">${item.sampling}</td>
+        <td class="num-col" style="color: var(--success);">${item.done}</td>
+        <td class="num-col" style="color: ${numColor}; font-weight: 800;">${item.saldo}</td>
+        <td class="num-col" style="color: ${pctColor}; font-weight: 800;">${item.qc}%</td>
+        <td><span class="badge ${badgeClass}" style="font-size: 10px; padding: 3px 8px;">${badgeText}</span></td>
+      </tr>
+    `;
+  });
+
+  container.innerHTML = `
+    <!-- HEADER -->
+    <div class="portrait-header">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="logo_transparan.png" style="width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); flex-shrink: 0;" alt="Monitoring Uji Petik Logo" />
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span class="header-badge" style="font-size: 10px; padding: 4px 8px;">LAPORAN OPERASIONAL</span>
+            <span style="font-size: 11px; font-weight: 800; color: var(--telkom-red);">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+          </div>
+          <h2 style="font-size: 20px; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em;">
+            MONITORING UJI PETIK PSB (34 STO)
+          </h2>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Kualitas Uji (OK): 100%</div>
+      </div>
+    </div>
+
+    <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
+    ${getExecutiveBannerHtml()}
+
+    <!-- FULL 34 STO DATA TABLE -->
+    <div class="portrait-table-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 35px;">NO</th>
+            <th style="width: 55px;">STO</th>
+            <th>SERVICE AREA (SA)</th>
+            <th>PIC AREA</th>
+            <th class="num-col" style="width: 65px;">SAMPLING</th>
+            <th class="num-col" style="width: 55px;">DONE</th>
+            <th class="num-col" style="width: 55px;">SALDO</th>
+            <th class="num-col" style="width: 60px;">% QC</th>
+            <th style="width: 110px;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+          <!-- TOTAL ROW -->
+          <tr style="background: var(--stat-box-bg); font-weight: 800; border-top: 2px solid var(--card-border);">
+            <td colspan="4" style="text-align: right; padding-right: 14px;">TOTAL DISTRICT BOGOR & SUKABUMI (PSB):</td>
+            <td class="num-col" style="color: var(--primary);">94</td>
+            <td class="num-col" style="color: var(--success);">75</td>
+            <td class="num-col" style="color: var(--danger); font-size: 14px;">19</td>
+            <td class="num-col" style="color: var(--warning); font-size: 14px;">79.79%</td>
+            <td><span class="badge badge-warning" style="font-size: 10px;">19 SALDO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FOOTER SIGNATURE -->
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim); padding-top: 10px; border-top: 1px solid var(--card-border);">
+      <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+      <span>Halaman Laporan Lengkap Uji Petik PSB</span>
+    </div>
+  `;
+}
+
+// RENDER FULL ASSURANCE PORTRAIT (ALL 23 SEKTORS) WITH FOTO KE-2 HEADER (REPLACED FOTO KE-1)
+function renderAssurancePortrait(container) {
+  let rowsHtml = '';
+  DATA.assurance.sektors.forEach((item, idx) => {
+    const isDone = item.saldo === 0;
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+    const numColor = item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)';
+    const pctColor = isDone ? 'var(--success)' : (item.ach >= 80 ? 'var(--warning)' : 'var(--danger)');
+
+    rowsHtml += `
+      <tr>
+        <td class="num-col" style="color: var(--text-dim);">${idx + 1}</td>
+        <td><strong>${item.sektor}</strong></td>
+        <td><span style="font-size: 11px; color: var(--text-muted);">${item.pic || '-'}</span></td>
+        <td class="num-col">${item.sampling}</td>
+        <td class="num-col" style="color: var(--success);">${item.done}</td>
+        <td class="num-col" style="color: ${numColor}; font-weight: 800;">${item.saldo}</td>
+        <td class="num-col" style="color: ${pctColor}; font-weight: 800;">${item.ach}%</td>
+        <td><span class="badge ${badgeClass}" style="font-size: 10px; padding: 3px 8px;">${badgeText}</span></td>
+      </tr>
+    `;
+  });
+
+  container.innerHTML = `
+    <!-- HEADER -->
+    <div class="portrait-header">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="logo_transparan.png" style="width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); flex-shrink: 0;" alt="Monitoring Uji Petik Logo" />
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span class="header-badge" style="font-size: 10px; padding: 4px 8px;">LAPORAN OPERASIONAL</span>
+            <span style="font-size: 11px; font-weight: 800; color: var(--telkom-red);">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+          </div>
+          <h2 style="font-size: 20px; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em;">
+            MONITORING UJI PETIK ASSURANCE (23 SEKTOR)
+          </h2>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Capaian Total: 91.95%</div>
+      </div>
+    </div>
+
+    <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER REPLACED FOTO KE-1) -->
+    ${getExecutiveBannerHtml()}
+
+    <!-- FULL 23 SEKTOR DATA TABLE -->
+    <div class="portrait-table-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 35px;">NO</th>
+            <th>SEKTOR ASSURANCE</th>
+            <th>PIC AREA</th>
+            <th class="num-col" style="width: 65px;">SAMPLING</th>
+            <th class="num-col" style="width: 55px;">DONE</th>
+            <th class="num-col" style="width: 55px;">SALDO</th>
+            <th class="num-col" style="width: 65px;">% ACH</th>
+            <th style="width: 110px;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+          <!-- TOTAL ROW -->
+          <tr style="background: var(--stat-box-bg); font-weight: 800; border-top: 2px solid var(--card-border);">
+            <td colspan="3" style="text-align: right; padding-right: 14px;">TOTAL DISTRICT BOGOR & SUKABUMI (ASSURANCE):</td>
+            <td class="num-col" style="color: var(--primary);">261</td>
+            <td class="num-col" style="color: var(--success);">240</td>
+            <td class="num-col" style="color: var(--danger); font-size: 14px;">21</td>
+            <td class="num-col" style="color: var(--success); font-size: 14px;">91.95%</td>
+            <td><span class="badge badge-warning" style="font-size: 10px;">21 SALDO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FOOTER SIGNATURE -->
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim); padding-top: 10px; border-top: 1px solid var(--card-border);">
+      <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+      <span>Halaman Laporan Lengkap Uji Petik Assurance</span>
+    </div>
+  `;
+}
+
+// RENDER OVERVIEW PORTRAIT (EXECUTIVE POSTER)
+function renderOverviewPortrait(container) {
+  container.innerHTML = `
+    <div class="portrait-header">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="logo_transparan.png" style="width: 74px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); flex-shrink: 0;" alt="Monitoring Uji Petik Logo" />
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span class="header-badge" style="font-size: 10px; padding: 4px 8px;">RINGKASAN EKSEKUTIF</span>
+            <span style="font-size: 11px; font-weight: 800; color: var(--telkom-red);">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em;">
+            MONITORING UJI PETIK (ASSURANCE & PSB)
+          </h2>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Kualitas Uji (OK): 100%</div>
+      </div>
+    </div>
+
+    <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
+    ${getExecutiveBannerHtml()}
+
+    <!-- TOP BOTTLENECK IN PORTRAIT -->
+    <div class="portrait-section" style="border-left: 5px solid var(--danger); margin-bottom: 20px;">
+      <div style="font-size: 13px; font-weight: 800; color: var(--danger); margin-bottom: 10px; display: flex; justify-content: space-between;">
+        <span>🚨 Fokus Intervensi PIC & Saldo Tertinggal</span>
+        <span>Total 33/40 Saldo (82.5%)</span>
+      </div>
+      <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+          <span><strong>ERWIN PERMANA</strong> (Sektor Cibadak - Assurance)</span>
+          <strong style="color: var(--danger);">12 Saldo</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+          <span><strong>JANUAR FADLILLAH</strong> (SA Cibadak STO CBD/CCR - PSB)</span>
+          <strong style="color: var(--danger);">8 Saldo</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+          <span><strong>FAUZAN ADZIMA</strong> (SA Sukabumi STO SKB - PSB)</span>
+          <strong style="color: var(--danger);">7 Saldo</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER SIGNATURE -->
+    <div style="padding-top: 14px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim);">
+      <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
+      <span>Status Kualitas Uji: <strong>100% OK</strong></span>
+    </div>
+  `;
+}
+
+// DOWNLOAD PORTRAIT AS JPG (FULL HEIGHT WITHOUT ANY TRUNCATION)
+async function downloadPortraitJPG() {
+  const target = document.getElementById('portrait-canvas-target');
+  const btn = document.getElementById('btn-save-jpg');
+  const originalText = btn.innerHTML;
+  
+  btn.innerHTML = '⏳ Menyiapkan Seluruh Data...';
+  btn.disabled = true;
+
+  const modalBox = document.querySelector('.modal-box');
+  const modalBody = document.querySelector('.modal-body');
+
+  // Save current scroll & styles so we can restore them seamlessly
+  const savedScrollTop = modalBody ? modalBody.scrollTop : 0;
+  const prevBoxMaxH = modalBox ? modalBox.style.maxHeight : '';
+  const prevBoxOverflow = modalBox ? modalBox.style.overflow : '';
+  const prevBodyOverflow = modalBody ? modalBody.style.overflow : '';
+  const prevBodyHeight = modalBody ? modalBody.style.height : '';
+  const prevBodyMaxH = modalBody ? modalBody.style.maxHeight : '';
+
+  try {
+    // 1. Reset scroll to top
+    if (modalBody) modalBody.scrollTop = 0;
+
+    // 2. Temporarily unconstrain height & overflow so browser expands to 100% of data
+    if (modalBox) {
+      modalBox.style.maxHeight = 'none';
+      modalBox.style.overflow = 'visible';
+    }
+    if (modalBody) {
+      modalBody.style.overflow = 'visible';
+      modalBody.style.height = 'auto';
+      modalBody.style.maxHeight = 'none';
+    }
+
+    // Allow browser DOM reflow
+    await new Promise(resolve => setTimeout(resolve, 80));
+
+    // 3. Accurately calculate full dimensions
+    const fullHeight = Math.max(target.scrollHeight, target.offsetHeight, 1200);
+    const fullWidth = 840;
+
+    const isLight = document.body.classList.contains('light-theme');
+    const bgColor = isLight ? '#ffffff' : '#111827';
+
+    // 4. Run html2canvas with full dimensions and unconstrained clone
+    const canvas = await html2canvas(target, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: bgColor,
+      logging: false,
+      width: fullWidth,
+      height: fullHeight,
+      windowWidth: Math.max(document.documentElement.clientWidth, 950),
+      windowHeight: fullHeight + 400,
+      scrollY: 0,
+      scrollX: 0,
+      x: 0,
+      y: 0,
+      onclone: (clonedDoc) => {
+        clonedDoc.body.style.minWidth = '900px';
+        const cOverlay = clonedDoc.getElementById('portrait-modal');
+        const cBox = clonedDoc.querySelector('.modal-box');
+        const cBody = clonedDoc.querySelector('.modal-body');
+        const cTarget = clonedDoc.getElementById('portrait-canvas-target');
+
+        if (cOverlay) {
+          cOverlay.style.position = 'static';
+          cOverlay.style.display = 'block';
+          cOverlay.style.height = 'auto';
+          cOverlay.style.maxHeight = 'none';
+          cOverlay.style.overflow = 'visible';
+          cOverlay.style.padding = '0';
+        }
+        if (cBox) {
+          cBox.style.position = 'static';
+          cBox.style.display = 'block';
+          cBox.style.height = 'auto';
+          cBox.style.maxHeight = 'none';
+          cBox.style.maxWidth = 'none';
+          cBox.style.width = '100%';
+          cBox.style.overflow = 'visible';
+          cBox.style.boxShadow = 'none';
+          cBox.style.border = 'none';
+        }
+        if (cBody) {
+          cBody.style.position = 'static';
+          cBody.style.display = 'block';
+          cBody.style.height = 'auto';
+          cBody.style.maxHeight = 'none';
+          cBody.style.overflow = 'visible';
+          cBody.style.padding = '0';
+        }
+        if (cTarget) {
+          cTarget.style.position = 'static';
+          cTarget.style.height = 'auto';
+          cTarget.style.maxHeight = 'none';
+          cTarget.style.overflow = 'visible';
+          cTarget.style.boxShadow = 'none';
+          cTarget.style.margin = '0 auto';
+          cTarget.style.width = fullWidth + 'px';
+        }
+      }
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    const link = document.createElement('a');
+    link.href = imgData;
+    const viewName = activePortraitView.toUpperCase();
+    link.download = 'Uji_Petik_District_Bogor_' + viewName + '_' + new Date().toISOString().slice(0, 10) + '.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    btn.innerHTML = '✅ Berhasil Disimpan!';
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 2000);
+  } catch (err) {
+    console.error('Gagal mengekspor JPG:', err);
+    alert('Terjadi kesalahan saat memproses gambar JPG. Silakan coba lagi.');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  } finally {
+    // 5. Always restore original modal styles and scroll position
+    if (modalBox) {
+      modalBox.style.maxHeight = prevBoxMaxH;
+      modalBox.style.overflow = prevBoxOverflow;
+    }
+    if (modalBody) {
+      modalBody.style.overflow = prevBodyOverflow;
+      modalBody.style.height = prevBodyHeight;
+      modalBody.style.maxHeight = prevBodyMaxH;
+      modalBody.scrollTop = savedScrollTop;
+    }
+  }
+}
+
+// OVERVIEW CHARTS & MATRICES
+function renderOverviewCharts() {
+  const streamBox = document.getElementById('chart-stream-bars');
+  const assAch = DATA.assurance.total.ach;
+  const psbAch = DATA.psb.total.ach;
+  
+  streamBox.innerHTML = `
+    <div class="bar-row">
+      <div class="bar-label"><strong>Assurance</strong></div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: ${assAch}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${assAch}%</div>
+      </div>
+      <div class="bar-value">${DATA.assurance.total.done}/${DATA.assurance.total.sampling}</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><strong>PSB</strong></div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: ${psbAch}%; background: linear-gradient(90deg, #10b981, #34d399);">${psbAch}%</div>
+      </div>
+      <div class="bar-value">${DATA.psb.total.done}/${DATA.psb.total.sampling}</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color: var(--accent);"><strong>District Bogor</strong></div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 88.73%; background: linear-gradient(90deg, #8b5cf6, #c084fc);">88.73%</div>
+      </div>
+      <div class="bar-value">315/355</div>
+    </div>
+  `;
+
+  const areaBox = document.getElementById('chart-area-bars');
+  let areaHtml = '';
+  DATA.assurance.groups.forEach(g => {
+    let color = g.ach >= 95 ? 'var(--success-gradient)' : (g.ach >= 80 ? 'var(--warning-gradient)' : 'var(--danger-gradient)');
+    areaHtml += `
+      <div class="bar-row">
+        <div class="bar-label"><strong>${g.name}</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${g.ach}%; background: ${color};">${g.ach}%</div>
+        </div>
+        <div class="bar-value">${g.done}/${g.sampling}</div>
+      </div>
+    `;
+  });
+  areaBox.innerHTML = areaHtml;
+
+  const saContainer = document.getElementById('sa-matrix-container');
+  let saHtml = '';
+  DATA.psb.sa_summary.forEach(sa => {
+    const isDone = sa.saldo === 0;
+    const tileClass = isDone ? 'done' : 'pending';
+    const statusText = isDone ? '100% TUNTAS' : sa.saldo + ' Saldo';
+    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+    
+    saHtml += `
+      <div class="sa-tile ${tileClass}">
+        <div class="sa-tile-header">
+          <span class="sa-title" title="${sa.sa}">${sa.sa}</span>
+          <span class="badge ${badgeClass}">${statusText}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px;">
+          <div style="font-size: 11px; color: var(--text-muted);">
+            Done: <strong style="color: var(--text-main);">${sa.done}</strong>/${sa.sampling}
+          </div>
+          <div style="font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: ${isDone ? 'var(--success)' : 'var(--danger)'};">
+            ${sa.ach}%
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  saContainer.innerHTML = saHtml;
+}
+
+// ASSURANCE TABLE
+function renderAssuranceTable() {
+  const tbody = document.getElementById('tbody-assurance');
+  const search = document.getElementById('search-ass').value.toLowerCase();
+  const statusFilter = document.getElementById('filter-ass-status').value;
+
+  let filtered = DATA.assurance.sektors.filter(item => {
+    const matchSearch = item.sektor.toLowerCase().includes(search) || item.pic.toLowerCase().includes(search);
+    if (!matchSearch) return false;
+    if (statusFilter === 'SALDO') return item.saldo > 0;
+    if (statusFilter === 'DONE') return item.saldo === 0;
+    return true;
+  });
+
+  tbody.innerHTML = filtered.map((item, idx) => {
+    const isDone = item.saldo === 0;
+    const progressColor = isDone ? 'var(--success)' : (item.ach >= 80 ? 'var(--warning)' : 'var(--danger)');
+    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+
+    return `
+      <tr>
+        <td class="num-col" style="color: var(--text-muted);">${idx + 1}</td>
+        <td><strong>${item.sektor}</strong></td>
+        <td><span style="font-size:12px; color: var(--text-muted);">${item.pic || '-'}</span></td>
+        <td class="num-col">${item.sampling}</td>
+        <td class="num-col" style="color: var(--success); font-weight: 800;">${item.done}</td>
+        <td class="num-col" style="color: ${item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: 800;">${item.saldo}</td>
+        <td>
+          <div class="table-progress">
+            <div class="table-progress-bar">
+              <div class="table-progress-fill" style="width: ${item.ach}%; background: ${progressColor};"></div>
+            </div>
+          </div>
+        </td>
+        <td class="num-col" style="font-weight: 800; color: ${progressColor};">${item.ach}%</td>
+        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// PSB TABLE
+function renderPSBTable() {
+  const tbody = document.getElementById('tbody-psb');
+  const search = document.getElementById('search-psb').value.toLowerCase();
+  const saFilter = document.getElementById('filter-psb-sa').value;
+  const statusFilter = document.getElementById('filter-psb-status').value;
+
+  let filtered = DATA.psb.sto_list.filter(item => {
+    const matchSearch = item.sto.toLowerCase().includes(search) || item.sa.toLowerCase().includes(search) || item.pic.toLowerCase().includes(search);
+    if (!matchSearch) return false;
+    if (saFilter !== 'ALL' && item.sa !== saFilter) return false;
+    if (statusFilter === 'SALDO') return item.saldo > 0;
+    if (statusFilter === 'DONE') return item.saldo === 0;
+    return true;
+  });
+
+  tbody.innerHTML = filtered.map((item, idx) => {
+    const isDone = item.saldo === 0;
+    const progressColor = isDone ? 'var(--success)' : (item.qc >= 50 ? 'var(--warning)' : 'var(--danger)');
+    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+
+    return `
+      <tr>
+        <td class="num-col" style="color: var(--text-muted);">${idx + 1}</td>
+        <td><strong style="color: var(--primary); font-size: 14px;">${item.sto}</strong></td>
+        <td><span style="font-weight: 600;">${item.sa}</span></td>
+        <td><span style="font-size:12px; color: var(--text-muted);">${item.pic}</span></td>
+        <td class="num-col">${item.sampling}</td>
+        <td class="num-col" style="color: var(--success); font-weight: 800;">${item.done}</td>
+        <td class="num-col" style="color: ${item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: 800;">${item.saldo}</td>
+        <td>
+          <div class="table-progress">
+            <div class="table-progress-bar">
+              <div class="table-progress-fill" style="width: ${item.qc}%; background: ${progressColor};"></div>
+            </div>
+          </div>
+        </td>
+        <td class="num-col" style="font-weight: 800; color: ${progressColor};">${item.qc}%</td>
+        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// BOTTLENECK CARDS
+function renderBottlenecks() {
+  const container = document.getElementById('bottleneck-cards-container');
+  const bottlenecks = [
+    {
+      title: 'SEKTOR CIBADAK (Assurance)',
+      pic: 'ERWIN PERMANA | 885959',
+      saldo: 12,
+      target: 15,
+      done: 3,
+      ach: 20.0,
+      severity: 'critical',
+      note: 'Penyumbang saldo terbesar pada Assurance (12 dari 21 saldo). Capaian baru 20%.'
+    },
+    {
+      title: 'SA SUKABUMI - STO SKB (PSB)',
+      pic: 'FAUZAN ADZIMA - 16860876',
+      saldo: 7,
+      target: 10,
+      done: 3,
+      ach: 30.0,
+      severity: 'critical',
+      note: 'Penyumbang saldo terbesar pada PSB. Populasi September 299 PS, baru 3 order teruji.'
+    },
+    {
+      title: 'SA CIBADAK - STO CBD & CCR (PSB)',
+      pic: 'JANUAR FADLILLAH - 16911813',
+      saldo: 8,
+      target: 10,
+      done: 2,
+      ach: 20.0,
+      severity: 'critical',
+      note: 'CBD saldo 5, CCR saldo 2, KLU saldo 1. Uji petik PSB tertahan.'
+    },
+    {
+      title: 'SEKTOR SUKABUMI 2 (Assurance)',
+      pic: 'RIZKI NOVIANDY FAJAR | 18920082',
+      saldo: 2,
+      target: 12,
+      done: 10,
+      ach: 83.3,
+      severity: 'warning',
+      note: '2 order masih dalam proses upload eviden ke sistem.'
+    },
+    {
+      title: 'SEKTOR DRAMAGA (Assurance & PSB)',
+      pic: 'RIFQI AL AMIN / DEDENG W.',
+      saldo: 4,
+      target: 24,
+      done: 20,
+      ach: 83.3,
+      severity: 'warning',
+      note: 'Assurance saldo 2 (Dramaga), PSB saldo 2 (CGD & JSA).'
+    },
+    {
+      title: 'SEKTOR SENTUL (Assurance)',
+      pic: 'DENI LESMANA | 20920044',
+      saldo: 2,
+      target: 10,
+      done: 8,
+      ach: 80.0,
+      severity: 'warning',
+      note: '2 order memerlukan penyelesaian uji fisik segera.'
+    }
+  ];
+
+  container.innerHTML = bottlenecks.map(b => `
+    <div class="bottleneck-card ${b.severity}">
+      <div class="bottleneck-title">
+        <span>${b.title}</span>
+        <span class="badge ${b.severity === 'critical' ? 'badge-danger' : 'badge-warning'}">${b.saldo} SALDO</span>
+      </div>
+      <div class="bottleneck-info">👤 PIC: <strong>${b.pic}</strong></div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">${b.note}</p>
+      <div class="bottleneck-stat">
+        <span>Target: <strong>${b.target}</strong></span>
+        <span>Done: <strong style="color:var(--success);">${b.done}</strong></span>
+        <span>Ach: <strong style="color:${b.ach < 50 ? 'var(--danger)' : 'var(--warning)'};">${b.ach}%</strong></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// PIC LEADERBOARD
+function renderPICTable() {
+  const tbody = document.getElementById('tbody-pic');
+  const search = document.getElementById('search-pic').value.toLowerCase();
+
+  const picMap = {};
+  DATA.assurance.sektors.forEach(s => {
+    const rawPic = s.pic || 'Unknown';
+    const name = rawPic.split('|')[0].trim();
+    if (!picMap[name]) picMap[name] = { name: name, sampling: 0, done: 0, saldo: 0 };
+    picMap[name].sampling += s.sampling;
+    picMap[name].done += s.done;
+    picMap[name].saldo += s.saldo;
+  });
+
+  DATA.psb.sto_list.forEach(s => {
+    const rawPic = s.pic || 'Unknown';
+    const name = rawPic.split('-')[0].trim();
+    if (!picMap[name]) picMap[name] = { name: name, sampling: 0, done: 0, saldo: 0 };
+    picMap[name].sampling += s.sampling;
+    picMap[name].done += s.done;
+    picMap[name].saldo += s.saldo;
+  });
+
+  let picList = Object.values(picMap).map(p => {
+    p.ach = p.sampling > 0 ? Math.round((p.done / p.sampling) * 10000) / 100 : 0;
+    return p;
+  });
+
+  picList.sort((a, b) => b.saldo - a.saldo || a.ach - b.ach);
+
+  let filtered = picList.filter(p => p.name.toLowerCase().includes(search));
+
+  tbody.innerHTML = filtered.map((p, idx) => {
+    const isDone = p.saldo === 0;
+    const progressColor = isDone ? 'var(--success)' : (p.ach >= 80 ? 'var(--warning)' : 'var(--danger)');
+    const badge = isDone ? '<span class="badge badge-success">⭐ 100% COMPLETE</span>' : (p.saldo >= 5 ? '<span class="badge badge-danger">⚠️ CRITICAL FOLLOW-UP</span>' : '<span class="badge badge-warning">⏳ SISA ' + p.saldo + ' SALDO</span>');
+    const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : '#' + (idx + 1)));
+
+    return `
+      <tr>
+        <td class="num-col" style="color: var(--text-muted); font-weight: 800;">${medal}</td>
+        <td><strong style="font-size: 14px;">${p.name}</strong></td>
+        <td class="num-col">${p.sampling}</td>
+        <td class="num-col" style="color: var(--success); font-weight: 800;">${p.done}</td>
+        <td class="num-col" style="color: ${p.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: 800;">${p.saldo}</td>
+        <td>
+          <div class="table-progress">
+            <div class="table-progress-bar">
+              <div class="table-progress-fill" style="width: ${p.ach}%; background: ${progressColor};"></div>
+            </div>
+          </div>
+        </td>
+        <td class="num-col" style="font-weight: 800; color: ${progressColor};">${p.ach}%</td>
+        <td>${badge}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// CSV EXPORT
+function exportTableCSV() {
+  let csv = 'Stream,Sektor_STO,Area_SA,PIC,Sampling,Done,Saldo,Ach_Pct,Status\n';
+  DATA.assurance.sektors.forEach(s => {
+    csv += `Assurance,"${s.sektor}","District Bogor","${s.pic}",${s.sampling},${s.done},${s.saldo},${s.ach}%,${s.saldo === 0 ? 'SUDAH' : 'BELUM'}\n`;
+  });
+  DATA.psb.sto_list.forEach(s => {
+    csv += `PSB,"${s.sto}","${s.sa}","${s.pic}",${s.sampling},${s.done},${s.saldo},${s.qc}%,${s.saldo === 0 ? 'SUDAH' : 'BELUM'}\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rekap_uji_petik_district_bogor.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function populateSAFilter() {
+  const select = document.getElementById('filter-psb-sa');
+  const sas = Array.from(new Set(DATA.psb.sto_list.map(s => s.sa))).sort();
+  sas.forEach(sa => {
+    const opt = document.createElement('option');
+    opt.value = sa;
+    opt.textContent = sa;
+    select.appendChild(opt);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  renderOverviewCharts();
+  renderAssuranceTable();
+  populateSAFilter();
+  renderPSBTable();
+  renderBottlenecks();
+  renderPICTable();
+});
+</script>
+
+</body>
+</html>
