@@ -1037,8 +1037,8 @@
       background: var(--bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      max-width: 920px;
-      width: 100%;
+      max-width: 1260px;
+      width: 96%;
       max-height: 96vh;
       display: flex;
       flex-direction: column;
@@ -1094,11 +1094,11 @@
 
     /* CAPTURE TARGET CONTAINER */
     #portrait-canvas-target {
-      width: 840px;
+      width: 1180px;
       background: var(--card-solid);
       border: 1px solid var(--card-border);
       border-radius: 20px;
-      padding: 34px 30px;
+      padding: 28px 24px;
       color: var(--text-main);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
       position: relative;
@@ -1135,21 +1135,53 @@
       padding: 16px 18px;
     }
 
+    .portrait-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
     .portrait-table-box {
       border: 1px solid var(--card-border);
       border-radius: 14px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
+      background: var(--card-solid);
+    }
+
+    .portrait-table-box table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
     }
 
     .portrait-table-box table thead th {
       background: var(--stat-box-bg);
-      padding: 10px 12px;
+      padding: 8px 6px;
       font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--card-border);
+      white-space: nowrap;
     }
 
     .portrait-table-box table tbody td {
-      padding: 10px 12px;
+      padding: 5px 6px;
+      font-size: 11px;
+      border-bottom: 1px solid var(--table-row-border);
+      vertical-align: middle;
+    }
+
+    .portrait-summary-bar {
+      background: var(--stat-box-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 12px;
     }
 
@@ -3868,30 +3900,64 @@ function getExecutiveBannerHtml() {
   `;
 }
 
-// RENDER FULL PSB PORTRAIT (ALL 34 STO) WITH FOTO KE-2 HEADER
-function renderPSBPortrait(container) {
-  let rowsHtml = '';
-  DATA.psb.sto_list.forEach((item, idx) => {
+// HELPER: GENERATE PSB SUB-TABLE FOR 2-COLUMN BALANCED LAYOUT
+function generatePSBTableHtml(items, startIdx) {
+  let rows = '';
+  items.forEach((item, i) => {
+    const idx = startIdx + i;
     const isDone = item.saldo === 0;
-    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ')';
     const badgeClass = isDone ? 'badge-success' : 'badge-danger';
     const numColor = item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)';
     const pctColor = isDone ? 'var(--success)' : (item.qc >= 50 ? 'var(--warning)' : 'var(--danger)');
 
-    rowsHtml += `
+    rows += `
       <tr>
-        <td class="num-col" style="color: var(--text-dim);">${idx + 1}</td>
-        <td><strong style="color: var(--primary); font-size: 13px;">${item.sto}</strong></td>
-        <td><strong>${item.sa}</strong></td>
-        <td><span style="font-size: 11px; color: var(--text-muted);">${item.pic}</span></td>
-        <td class="num-col">${item.sampling}</td>
-        <td class="num-col" style="color: var(--success);">${item.done}</td>
-        <td class="num-col" style="color: ${numColor}; font-weight: 800;">${item.saldo}</td>
-        <td class="num-col" style="color: ${pctColor}; font-weight: 800;">${item.qc}%</td>
-        <td><span class="badge ${badgeClass}" style="font-size: 10px; padding: 3px 8px;">${badgeText}</span></td>
+        <td class="num-col" style="color: var(--text-dim); width: 26px; text-align: center;">${idx + 1}</td>
+        <td style="width: 44px;"><strong style="color: var(--primary); font-size: 12px;">${item.sto}</strong></td>
+        <td style="width: 100px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.sa}">${item.sa}</td>
+        <td style="font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.pic}">${item.pic}</td>
+        <td class="num-col" style="width: 32px; text-align: center;">${item.sampling}</td>
+        <td class="num-col" style="width: 32px; text-align: center; color: var(--success); font-weight: 700;">${item.done}</td>
+        <td class="num-col" style="width: 32px; text-align: center; color: ${numColor}; font-weight: 800;">${item.saldo}</td>
+        <td class="num-col" style="width: 42px; text-align: center; color: ${pctColor}; font-weight: 800;">${item.qc}%</td>
+        <td style="width: 74px; text-align: center;"><span class="badge ${badgeClass}" style="font-size: 9px; padding: 2px 6px;">${badgeText}</span></td>
       </tr>
     `;
   });
+
+  return `
+    <div class="portrait-table-box" style="margin-bottom: 0;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 26px; text-align: center;">NO</th>
+            <th style="width: 44px;">STO</th>
+            <th style="width: 100px;">SA</th>
+            <th>PIC AREA</th>
+            <th class="num-col" style="width: 32px; text-align: center;">SMP</th>
+            <th class="num-col" style="width: 32px; text-align: center;">DONE</th>
+            <th class="num-col" style="width: 32px; text-align: center;">SLD</th>
+            <th class="num-col" style="width: 42px; text-align: center;">% QC</th>
+            <th style="width: 74px; text-align: center;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// RENDER FULL PSB PORTRAIT (34 STO SPLIT INTO 2 BALANCED COLUMNS)
+function renderPSBPortrait(container) {
+  const half = Math.ceil(DATA.psb.sto_list.length / 2); // 17
+  const leftItems = DATA.psb.sto_list.slice(0, half);
+  const rightItems = DATA.psb.sto_list.slice(half);
+
+  const leftTable = generatePSBTableHtml(leftItems, 0);
+  const rightTable = generatePSBTableHtml(rightItems, half);
 
   container.innerHTML = `
     <!-- HEADER -->
@@ -3907,7 +3973,7 @@ function renderPSBPortrait(container) {
             MONITORING UJI PETIK PSB (34 STO)
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • 34 STO (17 Kolom Kiri + 17 Kolom Kanan)
           </div>
         </div>
       </div>
@@ -3920,68 +3986,90 @@ function renderPSBPortrait(container) {
     <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
     ${getExecutiveBannerHtml()}
 
-    <!-- FULL 34 STO DATA TABLE -->
-    <div class="portrait-table-box">
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 35px;">NO</th>
-            <th style="width: 55px;">STO</th>
-            <th>SERVICE AREA (SA)</th>
-            <th>PIC AREA</th>
-            <th class="num-col" style="width: 65px;">SAMPLING</th>
-            <th class="num-col" style="width: 55px;">DONE</th>
-            <th class="num-col" style="width: 55px;">SALDO</th>
-            <th class="num-col" style="width: 60px;">% QC</th>
-            <th style="width: 110px;">STATUS</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHtml}
-          <!-- TOTAL ROW -->
-          <tr style="background: var(--stat-box-bg); font-weight: 800; border-top: 2px solid var(--card-border);">
-            <td colspan="4" style="text-align: right; padding-right: 14px;">TOTAL DISTRICT BOGOR & SUKABUMI (PSB):</td>
-            <td class="num-col" style="color: var(--primary);">94</td>
-            <td class="num-col" style="color: var(--success);">75</td>
-            <td class="num-col" style="color: var(--danger); font-size: 14px;">19</td>
-            <td class="num-col" style="color: var(--warning); font-size: 14px;">79.79%</td>
-            <td><span class="badge badge-warning" style="font-size: 10px;">19 SALDO</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- 2-COLUMN BALANCED TABLES (17 STO LEFT & 17 STO RIGHT) -->
+    <div class="portrait-grid-2col">
+      ${leftTable}
+      ${rightTable}
+    </div>
+
+    <!-- SUMMARY TOTAL DISTRICT BAR -->
+    <div class="portrait-summary-bar">
+      <div>
+        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (PSB 34 STO)</span>
+      </div>
+      <div style="display: flex; gap: 20px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+        <span>Target: <strong style="color: var(--primary);">94</strong></span>
+        <span>Done: <strong style="color: var(--success);">75</strong></span>
+        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">19</strong></span>
+        <span>% QC: <strong style="color: var(--warning); font-size: 14px;">79.79%</strong></span>
+        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">19 SALDO</span>
+      </div>
     </div>
 
     <!-- FOOTER SIGNATURE -->
     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim); padding-top: 10px; border-top: 1px solid var(--card-border);">
       <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
-      <span>Halaman Laporan Lengkap Uji Petik PSB</span>
+      <span>Halaman Laporan Lengkap Uji Petik PSB (Layout Proporsional 2 Kolom)</span>
     </div>
   `;
 }
 
-// RENDER FULL ASSURANCE PORTRAIT (ALL 23 SEKTORS) WITH FOTO KE-2 HEADER (REPLACED FOTO KE-1)
-function renderAssurancePortrait(container) {
-  let rowsHtml = '';
-  DATA.assurance.sektors.forEach((item, idx) => {
+// HELPER: GENERATE ASSURANCE SUB-TABLE FOR 2-COLUMN BALANCED LAYOUT
+function generateAssuranceTableHtml(items, startIdx) {
+  let rows = '';
+  items.forEach((item, i) => {
+    const idx = startIdx + i;
     const isDone = item.saldo === 0;
-    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ' Saldo)';
+    const badgeText = isDone ? 'SUDAH' : 'BELUM (' + item.saldo + ')';
     const badgeClass = isDone ? 'badge-success' : 'badge-danger';
     const numColor = item.saldo > 0 ? 'var(--danger)' : 'var(--text-muted)';
     const pctColor = isDone ? 'var(--success)' : (item.ach >= 80 ? 'var(--warning)' : 'var(--danger)');
 
-    rowsHtml += `
+    rows += `
       <tr>
-        <td class="num-col" style="color: var(--text-dim);">${idx + 1}</td>
-        <td><strong>${item.sektor}</strong></td>
-        <td><span style="font-size: 11px; color: var(--text-muted);">${item.pic || '-'}</span></td>
-        <td class="num-col">${item.sampling}</td>
-        <td class="num-col" style="color: var(--success);">${item.done}</td>
-        <td class="num-col" style="color: ${numColor}; font-weight: 800;">${item.saldo}</td>
-        <td class="num-col" style="color: ${pctColor}; font-weight: 800;">${item.ach}%</td>
-        <td><span class="badge ${badgeClass}" style="font-size: 10px; padding: 3px 8px;">${badgeText}</span></td>
+        <td class="num-col" style="color: var(--text-dim); width: 26px; text-align: center;">${idx + 1}</td>
+        <td style="width: 120px; font-weight: 700; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.sektor}">${item.sektor}</td>
+        <td style="font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.pic || '-'}">${item.pic || '-'}</td>
+        <td class="num-col" style="width: 36px; text-align: center;">${item.sampling}</td>
+        <td class="num-col" style="width: 36px; text-align: center; color: var(--success); font-weight: 700;">${item.done}</td>
+        <td class="num-col" style="width: 36px; text-align: center; color: ${numColor}; font-weight: 800;">${item.saldo}</td>
+        <td class="num-col" style="width: 46px; text-align: center; color: ${pctColor}; font-weight: 800;">${item.ach}%</td>
+        <td style="width: 76px; text-align: center;"><span class="badge ${badgeClass}" style="font-size: 9px; padding: 2px 6px;">${badgeText}</span></td>
       </tr>
     `;
   });
+
+  return `
+    <div class="portrait-table-box" style="margin-bottom: 0;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 26px; text-align: center;">NO</th>
+            <th style="width: 120px;">SEKTOR ASSURANCE</th>
+            <th>PIC AREA</th>
+            <th class="num-col" style="width: 36px; text-align: center;">SMP</th>
+            <th class="num-col" style="width: 36px; text-align: center;">DONE</th>
+            <th class="num-col" style="width: 36px; text-align: center;">SLD</th>
+            <th class="num-col" style="width: 46px; text-align: center;">% ACH</th>
+            <th style="width: 76px; text-align: center;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// RENDER FULL ASSURANCE PORTRAIT (23 SEKTOR SPLIT INTO 2 BALANCED COLUMNS)
+function renderAssurancePortrait(container) {
+  const half = Math.ceil(DATA.assurance.sektors.length / 2); // 12
+  const leftItems = DATA.assurance.sektors.slice(0, half);
+  const rightItems = DATA.assurance.sektors.slice(half);
+
+  const leftTable = generateAssuranceTableHtml(leftItems, 0);
+  const rightTable = generateAssuranceTableHtml(rightItems, half);
 
   container.innerHTML = `
     <!-- HEADER -->
@@ -3997,7 +4085,7 @@ function renderAssurancePortrait(container) {
             MONITORING UJI PETIK ASSURANCE (23 SEKTOR)
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • 23 Sektor (12 Kolom Kiri + 11 Kolom Kanan)
           </div>
         </div>
       </div>
@@ -4007,43 +4095,33 @@ function renderAssurancePortrait(container) {
       </div>
     </div>
 
-    <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER REPLACED FOTO KE-1) -->
+    <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
     ${getExecutiveBannerHtml()}
 
-    <!-- FULL 23 SEKTOR DATA TABLE -->
-    <div class="portrait-table-box">
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 35px;">NO</th>
-            <th>SEKTOR ASSURANCE</th>
-            <th>PIC AREA</th>
-            <th class="num-col" style="width: 65px;">SAMPLING</th>
-            <th class="num-col" style="width: 55px;">DONE</th>
-            <th class="num-col" style="width: 55px;">SALDO</th>
-            <th class="num-col" style="width: 65px;">% ACH</th>
-            <th style="width: 110px;">STATUS</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHtml}
-          <!-- TOTAL ROW -->
-          <tr style="background: var(--stat-box-bg); font-weight: 800; border-top: 2px solid var(--card-border);">
-            <td colspan="3" style="text-align: right; padding-right: 14px;">TOTAL DISTRICT BOGOR & SUKABUMI (ASSURANCE):</td>
-            <td class="num-col" style="color: var(--primary);">261</td>
-            <td class="num-col" style="color: var(--success);">240</td>
-            <td class="num-col" style="color: var(--danger); font-size: 14px;">21</td>
-            <td class="num-col" style="color: var(--success); font-size: 14px;">91.95%</td>
-            <td><span class="badge badge-warning" style="font-size: 10px;">21 SALDO</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- 2-COLUMN BALANCED TABLES (12 SEKTOR LEFT & 11 SEKTOR RIGHT) -->
+    <div class="portrait-grid-2col">
+      ${leftTable}
+      ${rightTable}
+    </div>
+
+    <!-- SUMMARY TOTAL DISTRICT BAR -->
+    <div class="portrait-summary-bar">
+      <div>
+        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (ASSURANCE 23 SEKTOR)</span>
+      </div>
+      <div style="display: flex; gap: 20px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+        <span>Target: <strong style="color: var(--primary);">261</strong></span>
+        <span>Done: <strong style="color: var(--success);">240</strong></span>
+        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">21</strong></span>
+        <span>% Ach: <strong style="color: var(--success); font-size: 14px;">91.95%</strong></span>
+        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">21 SALDO</span>
+      </div>
     </div>
 
     <!-- FOOTER SIGNATURE -->
     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim); padding-top: 10px; border-top: 1px solid var(--card-border);">
       <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
-      <span>Halaman Laporan Lengkap Uji Petik Assurance</span>
+      <span>Halaman Laporan Lengkap Uji Petik Assurance (Layout Proporsional 2 Kolom)</span>
     </div>
   `;
 }
@@ -4063,7 +4141,7 @@ function renderOverviewPortrait(container) {
             MONITORING UJI PETIK (ASSURANCE & PSB)
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-            Distrik: <strong>BOGOR DAN SUKABUMI</strong>
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • Executive Summary
           </div>
         </div>
       </div>
@@ -4076,37 +4154,68 @@ function renderOverviewPortrait(container) {
     <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
     ${getExecutiveBannerHtml()}
 
-    <!-- TOP BOTTLENECK IN PORTRAIT -->
-    <div class="portrait-section" style="border-left: 5px solid var(--danger); margin-bottom: 20px;">
-      <div style="font-size: 13px; font-weight: 800; color: var(--danger); margin-bottom: 10px; display: flex; justify-content: space-between;">
-        <span>🚨 Fokus Intervensi PIC & Saldo Tertinggal</span>
-        <span>Total 33/40 Saldo (82.5%)</span>
+    <!-- 2-COLUMN OVERVIEW DETAILS -->
+    <div class="portrait-grid-2col">
+      <!-- TOP BOTTLENECK IN PORTRAIT -->
+      <div class="portrait-section" style="border-left: 5px solid var(--danger); margin-bottom: 0;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--danger); margin-bottom: 12px; display: flex; justify-content: space-between;">
+          <span>🚨 Fokus Intervensi PIC & Saldo Tertinggal</span>
+          <span>33/40 Saldo (82.5%)</span>
+        </div>
+        <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+            <span><strong>ERWIN PERMANA</strong><br><small style="color: var(--text-muted);">Sektor Cibadak - Assurance</small></span>
+            <strong style="color: var(--danger); font-size: 14px;">12 Saldo</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+            <span><strong>JANUAR FADLILLAH</strong><br><small style="color: var(--text-muted);">SA Cibadak STO CBD/CCR - PSB</small></span>
+            <strong style="color: var(--danger); font-size: 14px;">8 Saldo</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+            <span><strong>FAUZAN ADZIMA</strong><br><small style="color: var(--text-muted);">SA Sukabumi STO SKB - PSB</small></span>
+            <strong style="color: var(--danger); font-size: 14px;">7 Saldo</strong>
+          </div>
+        </div>
       </div>
-      <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-          <span><strong>ERWIN PERMANA</strong> (Sektor Cibadak - Assurance)</span>
-          <strong style="color: var(--danger);">12 Saldo</strong>
+
+      <!-- STREAM COMPARISON TILE -->
+      <div class="portrait-section" style="border-left: 5px solid var(--primary); margin-bottom: 0;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 12px; display: flex; justify-content: space-between;">
+          <span>📋 Rekapitulasi per Stream Layanan</span>
+          <span>District Bogor-Sukabumi</span>
         </div>
-        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-          <span><strong>JANUAR FADLILLAH</strong> (SA Cibadak STO CBD/CCR - PSB)</span>
-          <strong style="color: var(--danger);">8 Saldo</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-          <span><strong>FAUZAN ADZIMA</strong> (SA Sukabumi STO SKB - PSB)</span>
-          <strong style="color: var(--danger);">7 Saldo</strong>
+        <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="padding: 10px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <strong>Assurance (23 Sektor)</strong>
+              <span class="badge badge-success" style="font-size: 10px;">91.95% ACH</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Target: 261 | Selesai: 240 | Sisa: <strong style="color: var(--danger);">21 Saldo</strong></div>
+          </div>
+          <div style="padding: 10px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <strong>PSB Pasang Baru (34 STO)</strong>
+              <span class="badge badge-warning" style="font-size: 10px;">79.79% ACH</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Target: 94 | Selesai: 75 | Sisa: <strong style="color: var(--danger);">19 Saldo</strong></div>
+          </div>
+          <div style="padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border); font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between;">
+            <span>Standar Kualitas Uji (QC):</span>
+            <strong style="color: var(--success);">100% OK Sesuai SOP</strong>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- FOOTER SIGNATURE -->
-    <div style="padding-top: 14px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim);">
+    <div style="padding-top: 14px; margin-top: 16px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim);">
       <span>TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
       <span>Status Kualitas Uji: <strong>100% OK</strong></span>
     </div>
   `;
 }
 
-// DOWNLOAD PORTRAIT AS JPG (FULL HEIGHT WITHOUT ANY TRUNCATION)
+// DOWNLOAD PORTRAIT AS JPG (FULL HEIGHT WITHOUT ANY TRUNCATION, PROPORTIONAL 1180PX WIDTH)
 async function downloadPortraitJPG() {
   const target = document.getElementById('portrait-canvas-target');
   const btn = document.getElementById('btn-save-jpg');
@@ -4144,9 +4253,9 @@ async function downloadPortraitJPG() {
     // Allow browser DOM reflow
     await new Promise(resolve => setTimeout(resolve, 80));
 
-    // 3. Accurately calculate full dimensions
-    const fullHeight = Math.max(target.scrollHeight, target.offsetHeight, 1200);
-    const fullWidth = 840;
+    // 3. Accurately calculate full dimensions (width 1180px for balanced aspect ratio)
+    const fullHeight = Math.max(target.scrollHeight, target.offsetHeight, 600);
+    const fullWidth = 1180;
 
     const isLight = document.body.classList.contains('light-theme');
     const bgColor = isLight ? '#ffffff' : '#111827';
@@ -4159,14 +4268,14 @@ async function downloadPortraitJPG() {
       logging: false,
       width: fullWidth,
       height: fullHeight,
-      windowWidth: Math.max(document.documentElement.clientWidth, 950),
-      windowHeight: fullHeight + 400,
+      windowWidth: Math.max(document.documentElement.clientWidth, 1260),
+      windowHeight: fullHeight + 300,
       scrollY: 0,
       scrollX: 0,
       x: 0,
       y: 0,
       onclone: (clonedDoc) => {
-        clonedDoc.body.style.minWidth = '900px';
+        clonedDoc.body.style.minWidth = '1220px';
         const cOverlay = clonedDoc.getElementById('portrait-modal');
         const cBox = clonedDoc.querySelector('.modal-box');
         const cBody = clonedDoc.querySelector('.modal-body');
@@ -4206,7 +4315,9 @@ async function downloadPortraitJPG() {
           cTarget.style.overflow = 'visible';
           cTarget.style.boxShadow = 'none';
           cTarget.style.margin = '0 auto';
-          cTarget.style.width = fullWidth + 'px';
+          cTarget.style.width = '1180px';
+          cTarget.style.maxWidth = '1180px';
+          cTarget.style.minWidth = '1180px';
         }
       }
     });
