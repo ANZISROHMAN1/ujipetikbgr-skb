@@ -3,15 +3,15 @@
     "title": "DASHBOARD MONITORING UJI PETIK DISTRICT BOGOR",
     "district": "BOGOR",
     "regional": "EASTERN JABOTABEK",
-    "generated_at": "2026-11-25 09:14:40",
+    "refreshed_at": "2026-11-26 06:32:32",
     "source_spreadsheet": "https://docs.google.com/spreadsheets/d/1iCLX_scRmLAMwKrjOS2FkasGwB2q8NOtfzjxxYol8Ow/edit"
   },
   "assurance": {
     "total": {
       "sampling": 261,
-      "saldo": 21,
-      "done": 240,
-      "ach": 91.95
+      "saldo": 16,
+      "done": 245,
+      "ach": 93.87
     },
     "groups": [
       {
@@ -24,23 +24,23 @@
       {
         "name": "KUJANG",
         "sampling": 104,
-        "saldo": 4,
-        "done": 100,
-        "ach": 96.15
+        "saldo": 3,
+        "done": 101,
+        "ach": 97.12
       },
       {
         "name": "SENTUL",
         "sampling": 50,
-        "saldo": 2,
-        "done": 48,
-        "ach": 96.0
+        "saldo": 0,
+        "done": 50,
+        "ach": 100.0
       },
       {
         "name": "SUKABUMI",
         "sampling": 40,
-        "saldo": 14,
-        "done": 26,
-        "ach": 65.0
+        "saldo": 12,
+        "done": 28,
+        "ach": 70.0
       }
     ],
     "sektors": [
@@ -171,9 +171,9 @@
         "sektor": "SEKTOR - BOGOR - DRAMAGA",
         "pic": "RIFQI AL AMIN DESTYADI|20920726",
         "sampling": 14,
-        "saldo": 2,
-        "done": 12,
-        "ach": 85.71,
+        "saldo": 1,
+        "done": 13,
+        "ach": 92.86,
         "is_subtotal": false
       },
       {
@@ -259,9 +259,9 @@
         "sektor": "SEKTOR - BOGOR - SENTUL",
         "pic": "DENI LESMANA|20920044",
         "sampling": 10,
-        "saldo": 2,
-        "done": 8,
-        "ach": 80.0,
+        "saldo": 0,
+        "done": 10,
+        "ach": 100.0,
         "is_subtotal": false
       },
       {
@@ -270,9 +270,9 @@
         "sektor": "SEKTOR - SUKABUMI - CIBADAK",
         "pic": "ERWIN PERMANA | 885959",
         "sampling": 15,
-        "saldo": 12,
-        "done": 3,
-        "ach": 20.0,
+        "saldo": 10,
+        "done": 5,
+        "ach": 33.33,
         "is_subtotal": false
       },
       {
@@ -522,13 +522,13 @@
         "jml_gaul": 0,
         "jml_hvc": 74,
         "sampling": 14,
-        "sudah": 12,
-        "belum": 2,
-        "ok": 12,
+        "sudah": 13,
+        "belum": 1,
+        "ok": 13,
         "nok": 0,
         "dispatch_sudah": 14,
         "dispatch_belum": 0,
-        "eviden_proses": 2,
+        "eviden_proses": 1,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
         "status": "BELUM"
@@ -648,16 +648,16 @@
         "jml_gaul": 0,
         "jml_hvc": 20,
         "sampling": 10,
-        "sudah": 8,
-        "belum": 2,
-        "ok": 8,
+        "sudah": 10,
+        "belum": 0,
+        "ok": 10,
         "nok": 0,
         "dispatch_sudah": 10,
         "dispatch_belum": 0,
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
-        "eviden_return": 2,
-        "status": "BELUM"
+        "eviden_return": 0,
+        "status": "SUDAH"
       },
       {
         "no": 21,
@@ -666,13 +666,13 @@
         "jml_gaul": 0,
         "jml_hvc": 105,
         "sampling": 15,
-        "sudah": 3,
-        "belum": 12,
-        "ok": 3,
+        "sudah": 5,
+        "belum": 10,
+        "ok": 5,
         "nok": 0,
         "dispatch_sudah": 15,
         "dispatch_belum": 0,
-        "eviden_proses": 12,
+        "eviden_proses": 10,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
         "status": "BELUM"
@@ -753,10 +753,10 @@
   },
   "psb": {
     "total": {
-      "sampling": 94,
-      "saldo": 19,
-      "done": 75,
-      "ach": 79.79
+      "sampling": 97,
+      "saldo": 10,
+      "done": 87,
+      "ach": 89.69
     },
     "sa_summary": [
       {
@@ -786,10 +786,10 @@
       {
         "sa": "CIBADAK",
         "sampling": 15,
-        "done": 7,
-        "saldo": 8,
-        "qc": 46.67,
-        "ach": 46.67
+        "done": 12,
+        "saldo": 3,
+        "qc": 80.0,
+        "ach": 80.0
       },
       {
         "sa": "CIBINONG",
@@ -810,10 +810,10 @@
       {
         "sa": "DRAMAGA",
         "sampling": 10,
-        "done": 8,
-        "saldo": 2,
-        "qc": 80.0,
-        "ach": 80.0
+        "done": 9,
+        "saldo": 1,
+        "qc": 90.0,
+        "ach": 90.0
       },
       {
         "sa": "GUNUNG PUTRI - CIANGSANA",
@@ -850,10 +850,10 @@
       {
         "sa": "SUKABUMI",
         "sampling": 11,
-        "done": 3,
-        "saldo": 8,
-        "qc": 27.27,
-        "ach": 27.27
+        "done": 6,
+        "saldo": 5,
+        "qc": 54.55,
+        "ach": 54.55
       }
     ],
     "sto_list": [
@@ -896,10 +896,10 @@
         "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
         "sto": "CBD",
         "sampling": 6,
-        "done": 1,
-        "saldo": 5,
-        "qc": 16.67,
-        "ach": 16.67
+        "done": 3,
+        "saldo": 3,
+        "qc": 50.0,
+        "ach": 50.0
       },
       {
         "no": 5,
@@ -918,10 +918,10 @@
         "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
         "sto": "CCR",
         "sampling": 2,
-        "done": 0,
-        "saldo": 2,
-        "qc": 0.0,
-        "ach": 0.0
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
       },
       {
         "no": 7,
@@ -929,10 +929,10 @@
         "pic": "DEDENG WAHYUDIN - 20930815",
         "sto": "CGD",
         "sampling": 1,
-        "done": 0,
-        "saldo": 1,
-        "qc": 0.0,
-        "ach": 0.0
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
       },
       {
         "no": 8,
@@ -973,10 +973,10 @@
         "pic": "FAUZAN ADZIMA - 16860876",
         "sto": "CMO",
         "sampling": 1,
-        "done": 0,
-        "saldo": 1,
-        "qc": 0.0,
-        "ach": 0.0
+        "done": 1,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
       },
       {
         "no": 12,
@@ -1127,10 +1127,10 @@
         "pic": "JANUAR FADLILLAH PURNAMA - 16911813",
         "sto": "KLU",
         "sampling": 2,
-        "done": 1,
-        "saldo": 1,
-        "qc": 50.0,
-        "ach": 50.0
+        "done": 2,
+        "saldo": 0,
+        "qc": 100.0,
+        "ach": 100.0
       },
       {
         "no": 26,
@@ -1193,10 +1193,10 @@
         "pic": "FAUZAN ADZIMA - 16860876",
         "sto": "SKB",
         "sampling": 10,
-        "done": 3,
-        "saldo": 7,
-        "qc": 30.0,
-        "ach": 30.0
+        "done": 5,
+        "saldo": 5,
+        "qc": 50.0,
+        "ach": 50.0
       },
       {
         "no": 32,
@@ -1310,9 +1310,9 @@
         "ffg": 0,
         "hvc": 0,
         "sampling": 6,
-        "sudah": 1,
-        "belum": 5,
-        "ok": 1,
+        "sudah": 3,
+        "belum": 3,
+        "ok": 3,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1321,8 +1321,8 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
-        "pct_ujipetik": 16.67,
-        "pct_ok": 16.67,
+        "pct_ujipetik": 50.0,
+        "pct_ok": 50.0,
         "status": "BELUM"
       },
       {
@@ -1356,9 +1356,9 @@
         "ffg": 1,
         "hvc": 0,
         "sampling": 2,
-        "sudah": 0,
-        "belum": 2,
-        "ok": 0,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1367,9 +1367,9 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
-        "pct_ujipetik": 0.0,
-        "pct_ok": 0.0,
-        "status": "BELUM"
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
       },
       {
         "no": 7,
@@ -1379,9 +1379,9 @@
         "ffg": 0,
         "hvc": 0,
         "sampling": 1,
-        "sudah": 0,
-        "belum": 1,
-        "ok": 0,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1390,9 +1390,9 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
-        "pct_ujipetik": 0.0,
-        "pct_ok": 0.0,
-        "status": "BELUM"
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
       },
       {
         "no": 8,
@@ -1471,9 +1471,9 @@
         "ffg": 0,
         "hvc": 0,
         "sampling": 1,
-        "sudah": 0,
-        "belum": 1,
-        "ok": 0,
+        "sudah": 1,
+        "belum": 0,
+        "ok": 1,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1482,9 +1482,9 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
-        "pct_ujipetik": 0.0,
-        "pct_ok": 0.0,
-        "status": "BELUM"
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
       },
       {
         "no": 12,
@@ -1573,7 +1573,7 @@
         "dispatch_belum": 0,
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
-        "eviden_return": 1,
+        "eviden_return": 0,
         "pct_ujipetik": 66.67,
         "pct_ok": 66.67,
         "status": "BELUM"
@@ -1793,9 +1793,9 @@
         "ffg": 0,
         "hvc": 0,
         "sampling": 2,
-        "sudah": 1,
-        "belum": 1,
-        "ok": 1,
+        "sudah": 2,
+        "belum": 0,
+        "ok": 2,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1804,9 +1804,9 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 0,
-        "pct_ujipetik": 50.0,
-        "pct_ok": 50.0,
-        "status": "BELUM"
+        "pct_ujipetik": 100.0,
+        "pct_ok": 100.0,
+        "status": "SUDAH"
       },
       {
         "no": 26,
@@ -1931,9 +1931,9 @@
         "ffg": 1,
         "hvc": 0,
         "sampling": 10,
-        "sudah": 3,
-        "belum": 7,
-        "ok": 3,
+        "sudah": 5,
+        "belum": 5,
+        "ok": 5,
         "nok_hvc": 0,
         "nok_total": 0,
         "nok_history": 0,
@@ -1942,8 +1942,8 @@
         "eviden_proses": 0,
         "eviden_belum_appr": 0,
         "eviden_return": 1,
-        "pct_ujipetik": 30.0,
-        "pct_ok": 30.0,
+        "pct_ujipetik": 50.0,
+        "pct_ok": 50.0,
         "status": "BELUM"
       },
       {

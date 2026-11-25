@@ -4,6 +4,17 @@ import os
 with open('dashboard_data.json', 'r', encoding='utf-8') as f:
     data_json = f.read()
 
+data_dict = json.loads(data_json)
+tot_ass = data_dict['assurance']['total']
+tot_psb = data_dict['psb']['total']
+tot_samp = tot_ass['sampling'] + tot_psb['sampling']
+tot_done = tot_ass['done'] + tot_psb['done']
+tot_saldo = tot_ass['saldo'] + tot_psb['saldo']
+tot_ach = round(tot_done / tot_samp * 100, 2) if tot_samp > 0 else 0
+saldo_pct = round(tot_saldo / tot_samp * 100, 2) if tot_samp > 0 else 0
+refreshed_at = data_dict.get('meta', {}).get('refreshed_at', '26 Nov 2026')
+gauge_offset = round(502.65 - (502.65 * tot_ach) / 100, 2)
+
 html_content = f'''<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1252,11 +1263,17 @@ html_content = f'''<!DOCTYPE html>
         <div class="header-subtitle">
           <span>📍 District: <strong>BOGOR DAN SUKABUMI</strong></span>
           <span>•</span>
-          <span>📅 Data Cut-off: <strong>25 Nov 2026, 09:14:40</strong></span>
+          <span id="data-cutoff-label">📅 Data Cut-off: <strong id="cutoff-date-val">{refreshed_at}</strong></span>
+          <span>•</span>
+          <span id="sync-status-badge" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--success); background: rgba(16, 185, 129, 0.12); padding: 2px 8px; border-radius: 20px; font-weight: 700;">🟢 Live Google Sheet</span>
         </div>
       </div>
     </div>
     <div class="header-actions">
+      <button onclick="syncGoogleSheetsData()" id="btn-sync-sheet" class="btn btn-outline" style="border-color: rgba(59, 130, 246, 0.4); display: inline-flex; align-items: center; gap: 6px;" title="Tarik dan sinkronkan data terbaru langsung dari Google Sheet">
+        <span id="sync-icon">🔄</span> <span id="sync-text">Sinkron Sheet</span>
+      </button>
+
       <button onclick="toggleTheme()" id="btn-theme" class="btn btn-theme" title="Ganti Mode Terang / Gelap">
         ☀️ Mode Terang
       </button>
@@ -1284,15 +1301,15 @@ html_content = f'''<!DOCTYPE html>
     </button>
     <button class="nav-tab" onclick="switchTab('assurance')">
       <span>🛠️ Uji Petik Assurance</span>
-      <span class="badge">91.95%</span>
+      <span class="badge" id="nav-badge-ass">{tot_ass['ach']}%</span>
     </button>
     <button class="nav-tab" onclick="switchTab('psb')">
       <span>📡 Uji Petik PSB</span>
-      <span class="badge">79.79%</span>
+      <span class="badge" id="nav-badge-psb">{tot_psb['ach']}%</span>
     </button>
     <button class="nav-tab" onclick="switchTab('bottleneck')">
       <span>⚠️ Analisis Saldo & Bottleneck</span>
-      <span class="badge" style="background: rgba(239,68,68,0.25); color: #f87171;">40 Saldo</span>
+      <span class="badge" id="nav-badge-saldo" style="background: rgba(239,68,68,0.25); color: #f87171;">{tot_saldo} Saldo</span>
     </button>
     <button class="nav-tab" onclick="switchTab('pic')">
       <span>👤 Leaderboard PIC Area</span>
@@ -1309,15 +1326,15 @@ html_content = f'''<!DOCTYPE html>
         <div class="radial-chart-wrapper">
           <svg viewBox="0 0 190 190">
             <circle class="radial-track" cx="95" cy="95" r="80"></circle>
-            <circle class="radial-fill" id="gauge-circle" cx="95" cy="95" r="80"></circle>
+            <circle class="radial-fill" id="gauge-circle" cx="95" cy="95" r="80" style="stroke-dasharray: 502.65; stroke-dashoffset: {gauge_offset};"></circle>
           </svg>
           <div class="gauge-center-text">
-            <div class="gauge-percentage">88.7%</div>
+            <div class="gauge-percentage" id="kpi-gauge-pct">{tot_ach}%</div>
             <div class="gauge-label">TARGET 100%</div>
           </div>
         </div>
-        <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-          Realisasi: <strong style="color: var(--success);">315</strong> dari <strong>355</strong> Sampling
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="kpi-realisasi-sub">
+          Realisasi: <strong style="color: var(--success);">{tot_done}</strong> dari <strong>{tot_samp}</strong> Sampling
         </div>
       </div>
 
@@ -1328,10 +1345,10 @@ html_content = f'''<!DOCTYPE html>
             <div class="stat-card-icon" style="background: var(--primary-glow); color: var(--primary);">🎯</div>
           </div>
           <div>
-            <div class="stat-val">355</div>
-            <div class="stat-subtext">
-              <span>Assurance: <strong>261</strong></span>
-              <span>PSB: <strong>94</strong></span>
+            <div class="stat-val" id="kpi-total-target">{tot_samp}</div>
+            <div class="stat-subtext" id="kpi-target-subtext">
+              <span>Assurance: <strong>{tot_ass['sampling']}</strong></span>
+              <span>PSB: <strong>{tot_psb['sampling']}</strong></span>
             </div>
             <div class="stat-progress-bar">
               <div class="stat-progress-fill" style="width: 100%; background: var(--primary);"></div>
@@ -1345,13 +1362,13 @@ html_content = f'''<!DOCTYPE html>
             <div class="stat-card-icon" style="background: var(--success-glow); color: var(--success);">✅</div>
           </div>
           <div>
-            <div class="stat-val" style="color: var(--success);">315</div>
-            <div class="stat-subtext">
-              <span>Assurance: <strong>240</strong></span>
-              <span>PSB: <strong>75</strong></span>
+            <div class="stat-val" id="kpi-total-done" style="color: var(--success);">{tot_done}</div>
+            <div class="stat-subtext" id="kpi-done-subtext">
+              <span>Assurance: <strong>{tot_ass['done']}</strong></span>
+              <span>PSB: <strong>{tot_psb['done']}</strong></span>
             </div>
             <div class="stat-progress-bar">
-              <div class="stat-progress-fill" style="width: 88.7%; background: var(--success);"></div>
+              <div class="stat-progress-fill" id="kpi-done-bar" style="width: {tot_ach}%; background: var(--success);"></div>
             </div>
           </div>
         </div>
@@ -1362,13 +1379,13 @@ html_content = f'''<!DOCTYPE html>
             <div class="stat-card-icon" style="background: var(--danger-glow); color: var(--danger);">⏳</div>
           </div>
           <div>
-            <div class="stat-val" style="color: var(--danger);">40</div>
-            <div class="stat-subtext">
-              <span>Assurance: <strong>21</strong></span>
-              <span>PSB: <strong>19</strong></span>
+            <div class="stat-val" id="kpi-total-saldo" style="color: var(--danger);">{tot_saldo}</div>
+            <div class="stat-subtext" id="kpi-saldo-subtext">
+              <span>Assurance: <strong>{tot_ass['saldo']}</strong></span>
+              <span>PSB: <strong>{tot_psb['saldo']}</strong></span>
             </div>
             <div class="stat-progress-bar">
-              <div class="stat-progress-fill" style="width: 11.3%; background: var(--danger);"></div>
+              <div class="stat-progress-fill" id="kpi-saldo-bar" style="width: {saldo_pct}%; background: var(--danger);"></div>
             </div>
           </div>
         </div>
@@ -1836,29 +1853,36 @@ function selectPortraitView(viewType) {{
   }}
 }}
 
-// COMMON EXECUTIVE SUMMARY BANNER (FOTO KE-2: 4 KPI TILES + PROGRESS CAPAIAN PER STREAM)
+// COMMON EXECUTIVE SUMMARY BANNER (FOTO KE-2: 4 KPI TILES + PROGRESS CAPAIAN PER STREAM DYNAMIC)
 function getExecutiveBannerHtml() {{
+  const ass = DATA.assurance.total;
+  const psb = DATA.psb.total;
+  const totSamp = ass.sampling + psb.sampling;
+  const totDone = ass.done + psb.done;
+  const totSaldo = ass.saldo + psb.saldo;
+  const totAch = totSamp > 0 ? (Math.round((totDone / totSamp) * 10000) / 100) : 0;
+
   return `
     <!-- 4 KPI TILES -->
     <div class="portrait-stat-grid">
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">TARGET</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); margin-top: 3px;">355</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass 261 • PSB 94</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); margin-top: 3px;">${{totSamp}}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass ${{ass.sampling}} • PSB ${{psb.sampling}}</div>
       </div>
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">DONE</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--success); margin-top: 3px;">315</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Tercapai 88.7%</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--success); margin-top: 3px;">${{totDone}}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Tercapai ${{totAch}}%</div>
       </div>
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">SALDO</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--danger); margin-top: 3px;">40</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass 21 • PSB 19</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--danger); margin-top: 3px;">${{totSaldo}}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass ${{ass.saldo}} • PSB ${{psb.saldo}}</div>
       </div>
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">% ACH</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 3px;">88.7%</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 3px;">${{totAch}}%</div>
         <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">QC OK: 100%</div>
       </div>
     </div>
@@ -1870,18 +1894,18 @@ function getExecutiveBannerHtml() {{
         <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
       </div>
       <div class="bar-row" style="margin-bottom: 10px;">
-        <div class="bar-label" style="width: 155px;"><strong>Assurance (23 Sektor)</strong></div>
+        <div class="bar-label" style="width: 155px;"><strong>Assurance (${{DATA.assurance.sektors.length}} Sektor)</strong></div>
         <div class="bar-track">
-          <div class="bar-fill" style="width: 91.95%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">91.95%</div>
+          <div class="bar-fill" style="width: ${{ass.ach}}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${{ass.ach}}%</div>
         </div>
-        <div class="bar-value">240/261</div>
+        <div class="bar-value">${{ass.done}}/${{ass.sampling}}</div>
       </div>
       <div class="bar-row" style="margin-bottom: 2px;">
-        <div class="bar-label" style="width: 155px;"><strong>PSB (34 STO)</strong></div>
+        <div class="bar-label" style="width: 155px;"><strong>PSB (${{DATA.psb.sto_list.length}} STO)</strong></div>
         <div class="bar-track">
-          <div class="bar-fill" style="width: 79.79%; background: linear-gradient(90deg, #10b981, #34d399);">79.79%</div>
+          <div class="bar-fill" style="width: ${{psb.ach}}%; background: linear-gradient(90deg, #10b981, #34d399);">${{psb.ach}}%</div>
         </div>
-        <div class="bar-value">75/94</div>
+        <div class="bar-value">${{psb.done}}/${{psb.sampling}}</div>
       </div>
     </div>
   `;
@@ -1939,7 +1963,7 @@ function generatePSBTableHtml(items, startIdx) {{
 
 // RENDER FULL PSB PORTRAIT (34 STO SPLIT INTO 2 BALANCED COLUMNS)
 function renderPSBPortrait(container) {{
-  const half = Math.ceil(DATA.psb.sto_list.length / 2); // 17
+  const half = Math.ceil(DATA.psb.sto_list.length / 2);
   const leftItems = DATA.psb.sto_list.slice(0, half);
   const rightItems = DATA.psb.sto_list.slice(half);
 
@@ -1957,15 +1981,15 @@ function renderPSBPortrait(container) {{
             <span style="font-size: 11px; font-weight: 800; color: var(--telkom-red);">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
           </div>
           <h2 style="font-size: 20px; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em;">
-            MONITORING UJI PETIK PSB (34 STO)
+            MONITORING UJI PETIK PSB (${{DATA.psb.sto_list.length}} STO)
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • 34 STO (17 Kolom Kiri + 17 Kolom Kanan)
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • ${{DATA.psb.sto_list.length}} STO (${{leftItems.length}} Kolom Kiri + ${{rightItems.length}} Kolom Kanan)
           </div>
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: ${{DATA.meta.refreshed_at || '26 Nov 2026'}}</div>
         <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Kualitas Uji (OK): 100%</div>
       </div>
     </div>
@@ -1982,14 +2006,14 @@ function renderPSBPortrait(container) {{
     <!-- SUMMARY TOTAL DISTRICT BAR -->
     <div class="portrait-summary-bar">
       <div>
-        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (PSB 34 STO)</span>
+        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (PSB ${{DATA.psb.sto_list.length}} STO)</span>
       </div>
       <div style="display: flex; gap: 20px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
-        <span>Target: <strong style="color: var(--primary);">94</strong></span>
-        <span>Done: <strong style="color: var(--success);">75</strong></span>
-        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">19</strong></span>
-        <span>% QC: <strong style="color: var(--warning); font-size: 14px;">79.79%</strong></span>
-        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">19 SALDO</span>
+        <span>Target: <strong style="color: var(--primary);">${{DATA.psb.total.sampling}}</strong></span>
+        <span>Done: <strong style="color: var(--success);">${{DATA.psb.total.done}}</strong></span>
+        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">${{DATA.psb.total.saldo}}</strong></span>
+        <span>% QC: <strong style="color: var(--warning); font-size: 14px;">${{DATA.psb.total.ach}}%</strong></span>
+        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">${{DATA.psb.total.saldo}} SALDO</span>
       </div>
     </div>
 
@@ -2051,7 +2075,7 @@ function generateAssuranceTableHtml(items, startIdx) {{
 
 // RENDER FULL ASSURANCE PORTRAIT (23 SEKTOR SPLIT INTO 2 BALANCED COLUMNS)
 function renderAssurancePortrait(container) {{
-  const half = Math.ceil(DATA.assurance.sektors.length / 2); // 12
+  const half = Math.ceil(DATA.assurance.sektors.length / 2);
   const leftItems = DATA.assurance.sektors.slice(0, half);
   const rightItems = DATA.assurance.sektors.slice(half);
 
@@ -2069,16 +2093,16 @@ function renderAssurancePortrait(container) {{
             <span style="font-size: 11px; font-weight: 800; color: var(--telkom-red);">TELKOM DISTRICT BOGOR DAN SUKABUMI</span>
           </div>
           <h2 style="font-size: 20px; font-weight: 900; color: var(--text-main); letter-spacing: -0.02em;">
-            MONITORING UJI PETIK ASSURANCE (23 SEKTOR)
+            MONITORING UJI PETIK ASSURANCE (${{DATA.assurance.sektors.length}} SEKTOR)
           </h2>
           <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • 23 Sektor (12 Kolom Kiri + 11 Kolom Kanan)
+            Distrik: <strong>BOGOR DAN SUKABUMI</strong> • ${{DATA.assurance.sektors.length}} Sektor (${{leftItems.length}} Kolom Kiri + ${{rightItems.length}} Kolom Kanan)
           </div>
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
-        <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Capaian Total: 91.95%</div>
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: ${{DATA.meta.refreshed_at || '26 Nov 2026'}}</div>
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Capaian Total: ${{DATA.assurance.total.ach}}%</div>
       </div>
     </div>
 
@@ -2094,14 +2118,14 @@ function renderAssurancePortrait(container) {{
     <!-- SUMMARY TOTAL DISTRICT BAR -->
     <div class="portrait-summary-bar">
       <div>
-        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (ASSURANCE 23 SEKTOR)</span>
+        <span style="font-weight: 800; color: var(--text-main); font-size: 13px;">TOTAL DISTRICT BOGOR & SUKABUMI (ASSURANCE ${{DATA.assurance.sektors.length}} SEKTOR)</span>
       </div>
       <div style="display: flex; gap: 20px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;">
-        <span>Target: <strong style="color: var(--primary);">261</strong></span>
-        <span>Done: <strong style="color: var(--success);">240</strong></span>
-        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">21</strong></span>
-        <span>% Ach: <strong style="color: var(--success); font-size: 14px;">91.95%</strong></span>
-        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">21 SALDO</span>
+        <span>Target: <strong style="color: var(--primary);">${{DATA.assurance.total.sampling}}</strong></span>
+        <span>Done: <strong style="color: var(--success);">${{DATA.assurance.total.done}}</strong></span>
+        <span>Saldo: <strong style="color: var(--danger); font-size: 14px;">${{DATA.assurance.total.saldo}}</strong></span>
+        <span>% Ach: <strong style="color: var(--success); font-size: 14px;">${{DATA.assurance.total.ach}}%</strong></span>
+        <span class="badge badge-warning" style="font-size: 11px; padding: 4px 10px;">${{DATA.assurance.total.saldo}} SALDO</span>
       </div>
     </div>
 
@@ -2115,6 +2139,41 @@ function renderAssurancePortrait(container) {{
 
 // RENDER OVERVIEW PORTRAIT (EXECUTIVE POSTER)
 function renderOverviewPortrait(container) {{
+  const ass = DATA.assurance.total;
+  const psb = DATA.psb.total;
+  const totSaldo = ass.saldo + psb.saldo;
+
+  // Dynamically extract top bottleneck PICs
+  const bMap = {{}};
+  DATA.assurance.sektors.forEach(s => {{
+    if (s.saldo > 0) {{
+      const rawPic = s.pic || 'Unknown';
+      const name = rawPic.split('|')[0].trim();
+      if (!bMap[name]) bMap[name] = {{ name: name, role: s.sektor + ' - Assurance', saldo: 0 }};
+      bMap[name].saldo += s.saldo;
+    }}
+  }});
+  DATA.psb.sto_list.forEach(s => {{
+    if (s.saldo > 0) {{
+      const rawPic = s.pic || 'Unknown';
+      const name = rawPic.split('-')[0].trim();
+      if (!bMap[name]) bMap[name] = {{ name: name, role: 'SA ' + s.sa + ' STO ' + s.sto + ' - PSB', saldo: 0 }};
+      bMap[name].saldo += s.saldo;
+    }}
+  }});
+
+  const bList = Object.values(bMap).sort((a, b) => b.saldo - a.saldo);
+  const top3 = bList.slice(0, 3);
+  const top3Sum = top3.reduce((acc, curr) => acc + curr.saldo, 0);
+  const top3Pct = totSaldo > 0 ? Math.round((top3Sum / totSaldo) * 1000) / 10 : 0;
+
+  const top3Html = top3.map(item => `
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
+      <span><strong>${{item.name}}</strong><br><small style="color: var(--text-muted);">${{item.role}}</small></span>
+      <strong style="color: var(--danger); font-size: 14px;">${{item.saldo}} Saldo</strong>
+    </div>
+  `).join('');
+
   container.innerHTML = `
     <div class="portrait-header">
       <div style="display: flex; align-items: center; gap: 14px;">
@@ -2133,7 +2192,7 @@ function renderOverviewPortrait(container) {{
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: 25 Nov 2026</div>
+        <div style="font-size: 12px; font-weight: 800; color: var(--primary);">Cut-off: ${{DATA.meta.refreshed_at || '26 Nov 2026'}}</div>
         <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Kualitas Uji (OK): 100%</div>
       </div>
     </div>
@@ -2147,21 +2206,10 @@ function renderOverviewPortrait(container) {{
       <div class="portrait-section" style="border-left: 5px solid var(--danger); margin-bottom: 0;">
         <div style="font-size: 13px; font-weight: 800; color: var(--danger); margin-bottom: 12px; display: flex; justify-content: space-between;">
           <span>🚨 Fokus Intervensi PIC & Saldo Tertinggal</span>
-          <span>33/40 Saldo (82.5%)</span>
+          <span>${{top3Sum}}/${{totSaldo}} Saldo (${{top3Pct}}%)</span>
         </div>
         <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-            <span><strong>ERWIN PERMANA</strong><br><small style="color: var(--text-muted);">Sektor Cibadak - Assurance</small></span>
-            <strong style="color: var(--danger); font-size: 14px;">12 Saldo</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-            <span><strong>JANUAR FADLILLAH</strong><br><small style="color: var(--text-muted);">SA Cibadak STO CBD/CCR - PSB</small></span>
-            <strong style="color: var(--danger); font-size: 14px;">8 Saldo</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
-            <span><strong>FAUZAN ADZIMA</strong><br><small style="color: var(--text-muted);">SA Sukabumi STO SKB - PSB</small></span>
-            <strong style="color: var(--danger); font-size: 14px;">7 Saldo</strong>
-          </div>
+          ${{top3Html || '<div style="color:var(--success); padding:8px;">Semua order telah selesai (0 saldo)!</div>'}}
         </div>
       </div>
 
@@ -2174,17 +2222,17 @@ function renderOverviewPortrait(container) {{
         <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
           <div style="padding: 10px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <strong>Assurance (23 Sektor)</strong>
-              <span class="badge badge-success" style="font-size: 10px;">91.95% ACH</span>
+              <strong>Assurance (${{DATA.assurance.sektors.length}} Sektor)</strong>
+              <span class="badge badge-success" style="font-size: 10px;">${{ass.ach}}% ACH</span>
             </div>
-            <div style="font-size: 11px; color: var(--text-muted);">Target: 261 | Selesai: 240 | Sisa: <strong style="color: var(--danger);">21 Saldo</strong></div>
+            <div style="font-size: 11px; color: var(--text-muted);">Target: ${{ass.sampling}} | Selesai: ${{ass.done}} | Sisa: <strong style="color: var(--danger);">${{ass.saldo}} Saldo</strong></div>
           </div>
           <div style="padding: 10px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border);">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <strong>PSB Pasang Baru (34 STO)</strong>
-              <span class="badge badge-warning" style="font-size: 10px;">79.79% ACH</span>
+              <strong>PSB Pasang Baru (${{DATA.psb.sto_list.length}} STO)</strong>
+              <span class="badge ${{psb.ach >= 80 ? 'badge-success' : 'badge-warning'}}" style="font-size: 10px;">${{psb.ach}}% ACH</span>
             </div>
-            <div style="font-size: 11px; color: var(--text-muted);">Target: 94 | Selesai: 75 | Sisa: <strong style="color: var(--danger);">19 Saldo</strong></div>
+            <div style="font-size: 11px; color: var(--text-muted);">Target: ${{psb.sampling}} | Selesai: ${{psb.done}} | Sisa: <strong style="color: var(--danger);">${{psb.saldo}} Saldo</strong></div>
           </div>
           <div style="padding: 8px 12px; background: var(--card-solid); border-radius: 8px; border: 1px solid var(--card-border); font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between;">
             <span>Standar Kualitas Uji (QC):</span>
@@ -2343,83 +2391,93 @@ async function downloadPortraitJPG() {{
   }}
 }}
 
-// OVERVIEW CHARTS & MATRICES
+// DYNAMIC OVERVIEW CHARTS & MATRICES
 function renderOverviewCharts() {{
   const streamBox = document.getElementById('chart-stream-bars');
   const assAch = DATA.assurance.total.ach;
   const psbAch = DATA.psb.total.ach;
+  const totSamp = DATA.assurance.total.sampling + DATA.psb.total.sampling;
+  const totDone = DATA.assurance.total.done + DATA.psb.total.done;
+  const totAch = totSamp > 0 ? (Math.round((totDone / totSamp) * 10000) / 100) : 0;
   
-  streamBox.innerHTML = `
-    <div class="bar-row">
-      <div class="bar-label"><strong>Assurance</strong></div>
-      <div class="bar-track">
-        <div class="bar-fill" style="width: ${{assAch}}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${{assAch}}%</div>
+  if (streamBox) {{
+    streamBox.innerHTML = `
+      <div class="bar-row">
+        <div class="bar-label"><strong>Assurance</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${{assAch}}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${{assAch}}%</div>
+        </div>
+        <div class="bar-value">${{DATA.assurance.total.done}}/${{DATA.assurance.total.sampling}}</div>
       </div>
-      <div class="bar-value">${{DATA.assurance.total.done}}/${{DATA.assurance.total.sampling}}</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label"><strong>PSB</strong></div>
-      <div class="bar-track">
-        <div class="bar-fill" style="width: ${{psbAch}}%; background: linear-gradient(90deg, #10b981, #34d399);">${{psbAch}}%</div>
+      <div class="bar-row">
+        <div class="bar-label"><strong>PSB</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${{psbAch}}%; background: linear-gradient(90deg, #10b981, #34d399);">${{psbAch}}%</div>
+        </div>
+        <div class="bar-value">${{DATA.psb.total.done}}/${{DATA.psb.total.sampling}}</div>
       </div>
-      <div class="bar-value">${{DATA.psb.total.done}}/${{DATA.psb.total.sampling}}</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label" style="color: var(--accent);"><strong>District Bogor</strong></div>
-      <div class="bar-track">
-        <div class="bar-fill" style="width: 88.73%; background: linear-gradient(90deg, #8b5cf6, #c084fc);">88.73%</div>
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--accent);"><strong>District Bogor</strong></div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${{totAch}}%; background: linear-gradient(90deg, #8b5cf6, #c084fc);">${{totAch}}%</div>
+        </div>
+        <div class="bar-value">${{totDone}}/${{totSamp}}</div>
       </div>
-      <div class="bar-value">315/355</div>
-    </div>
-  `;
+    `;
+  }}
 
   const areaBox = document.getElementById('chart-area-bars');
-  let areaHtml = '';
-  DATA.assurance.groups.forEach(g => {{
-    let color = g.ach >= 95 ? 'var(--success-gradient)' : (g.ach >= 80 ? 'var(--warning-gradient)' : 'var(--danger-gradient)');
-    areaHtml += `
-      <div class="bar-row">
-        <div class="bar-label"><strong>${{g.name}}</strong></div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width: ${{g.ach}}%; background: ${{color}};">${{g.ach}}%</div>
+  if (areaBox) {{
+    let areaHtml = '';
+    DATA.assurance.groups.forEach(g => {{
+      let color = g.ach >= 95 ? 'var(--success-gradient)' : (g.ach >= 80 ? 'var(--warning-gradient)' : 'var(--danger-gradient)');
+      areaHtml += `
+        <div class="bar-row">
+          <div class="bar-label"><strong>${{g.name}}</strong></div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${{g.ach}}%; background: ${{color}};">${{g.ach}}%</div>
+          </div>
+          <div class="bar-value">${{g.done}}/${{g.sampling}}</div>
         </div>
-        <div class="bar-value">${{g.done}}/${{g.sampling}}</div>
-      </div>
-    `;
-  }});
-  areaBox.innerHTML = areaHtml;
+      `;
+    }});
+    areaBox.innerHTML = areaHtml;
+  }}
 
   const saContainer = document.getElementById('sa-matrix-container');
-  let saHtml = '';
-  DATA.psb.sa_summary.forEach(sa => {{
-    const isDone = sa.saldo === 0;
-    const tileClass = isDone ? 'done' : 'pending';
-    const statusText = isDone ? '100% TUNTAS' : sa.saldo + ' Saldo';
-    const badgeClass = isDone ? 'badge-success' : 'badge-danger';
-    
-    saHtml += `
-      <div class="sa-tile ${{tileClass}}">
-        <div class="sa-tile-header">
-          <span class="sa-title" title="${{sa.sa}}">${{sa.sa}}</span>
-          <span class="badge ${{badgeClass}}">${{statusText}}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px;">
-          <div style="font-size: 11px; color: var(--text-muted);">
-            Done: <strong style="color: var(--text-main);">${{sa.done}}</strong>/${{sa.sampling}}
+  if (saContainer && DATA.psb.sa_summary) {{
+    let saHtml = '';
+    DATA.psb.sa_summary.forEach(sa => {{
+      const isDone = sa.saldo === 0;
+      const tileClass = isDone ? 'done' : 'pending';
+      const statusText = isDone ? '100% TUNTAS' : sa.saldo + ' Saldo';
+      const badgeClass = isDone ? 'badge-success' : 'badge-danger';
+      
+      saHtml += `
+        <div class="sa-tile ${{tileClass}}">
+          <div class="sa-tile-header">
+            <span class="sa-title" title="${{sa.sa}}">${{sa.sa}}</span>
+            <span class="badge ${{badgeClass}}">${{statusText}}</span>
           </div>
-          <div style="font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: ${{isDone ? 'var(--success)' : 'var(--danger)'}};">
-            ${{sa.ach}}%
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px;">
+            <div style="font-size: 11px; color: var(--text-muted);">
+              Done: <strong style="color: var(--text-main);">${{sa.done}}</strong>/${{sa.sampling}}
+            </div>
+            <div style="font-size: 14px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: ${{isDone ? 'var(--success)' : 'var(--danger)'}};">
+              ${{sa.ach}}%
+            </div>
           </div>
         </div>
-      </div>
-    `;
-  }});
-  saContainer.innerHTML = saHtml;
+      `;
+    }});
+    saContainer.innerHTML = saHtml;
+  }}
 }}
 
 // ASSURANCE TABLE
 function renderAssuranceTable() {{
   const tbody = document.getElementById('tbody-assurance');
+  if (!tbody) return;
   const search = document.getElementById('search-ass').value.toLowerCase();
   const statusFilter = document.getElementById('filter-ass-status').value;
 
@@ -2462,6 +2520,7 @@ function renderAssuranceTable() {{
 // PSB TABLE
 function renderPSBTable() {{
   const tbody = document.getElementById('tbody-psb');
+  if (!tbody) return;
   const search = document.getElementById('search-psb').value.toLowerCase();
   const saFilter = document.getElementById('filter-psb-sa').value;
   const statusFilter = document.getElementById('filter-psb-status').value;
@@ -2504,73 +2563,58 @@ function renderPSBTable() {{
   }}).join('');
 }}
 
-// BOTTLENECK CARDS
+// DYNAMIC BOTTLENECK CARDS (AUTOMATICALLY EXTRACTED FROM LIVE DATA)
 function renderBottlenecks() {{
   const container = document.getElementById('bottleneck-cards-container');
-  const bottlenecks = [
-    {{
-      title: 'SEKTOR CIBADAK (Assurance)',
-      pic: 'ERWIN PERMANA | 885959',
-      saldo: 12,
-      target: 15,
-      done: 3,
-      ach: 20.0,
-      severity: 'critical',
-      note: 'Penyumbang saldo terbesar pada Assurance (12 dari 21 saldo). Capaian baru 20%.'
-    }},
-    {{
-      title: 'SA SUKABUMI - STO SKB (PSB)',
-      pic: 'FAUZAN ADZIMA - 16860876',
-      saldo: 7,
-      target: 10,
-      done: 3,
-      ach: 30.0,
-      severity: 'critical',
-      note: 'Penyumbang saldo terbesar pada PSB. Populasi September 299 PS, baru 3 order teruji.'
-    }},
-    {{
-      title: 'SA CIBADAK - STO CBD & CCR (PSB)',
-      pic: 'JANUAR FADLILLAH - 16911813',
-      saldo: 8,
-      target: 10,
-      done: 2,
-      ach: 20.0,
-      severity: 'critical',
-      note: 'CBD saldo 5, CCR saldo 2, KLU saldo 1. Uji petik PSB tertahan.'
-    }},
-    {{
-      title: 'SEKTOR SUKABUMI 2 (Assurance)',
-      pic: 'RIZKI NOVIANDY FAJAR | 18920082',
-      saldo: 2,
-      target: 12,
-      done: 10,
-      ach: 83.3,
-      severity: 'warning',
-      note: '2 order masih dalam proses upload eviden ke sistem.'
-    }},
-    {{
-      title: 'SEKTOR DRAMAGA (Assurance & PSB)',
-      pic: 'RIFQI AL AMIN / DEDENG W.',
-      saldo: 4,
-      target: 24,
-      done: 20,
-      ach: 83.3,
-      severity: 'warning',
-      note: 'Assurance saldo 2 (Dramaga), PSB saldo 2 (CGD & JSA).'
-    }},
-    {{
-      title: 'SEKTOR SENTUL (Assurance)',
-      pic: 'DENI LESMANA | 20920044',
-      saldo: 2,
-      target: 10,
-      done: 8,
-      ach: 80.0,
-      severity: 'warning',
-      note: '2 order memerlukan penyelesaian uji fisik segera.'
-    }}
-  ];
+  if (!container) return;
 
-  container.innerHTML = bottlenecks.map(b => `
+  const items = [];
+
+  DATA.assurance.sektors.forEach(s => {{
+    if (s.saldo > 0) {{
+      items.push({{
+        title: s.sektor + ' (Assurance)',
+        pic: s.pic || '-',
+        saldo: s.saldo,
+        target: s.sampling,
+        done: s.done,
+        ach: s.ach,
+        severity: s.saldo >= 5 ? 'critical' : 'warning',
+        note: `Penyumbang ${{s.saldo}} saldo pada Assurance. Capaian saat ini ${{s.ach}}%.`
+      }});
+    }}
+  }});
+
+  DATA.psb.sto_list.forEach(s => {{
+    if (s.saldo > 0) {{
+      items.push({{
+        title: `SA ${{s.sa}} - STO ${{s.sto}} (PSB)`,
+        pic: s.pic || '-',
+        saldo: s.saldo,
+        target: s.sampling,
+        done: s.done,
+        ach: s.qc,
+        severity: s.saldo >= 3 ? 'critical' : 'warning',
+        note: `Penyumbang ${{s.saldo}} saldo pada PSB. Capaian saat ini ${{s.qc}}%.`
+      }});
+    }}
+  }});
+
+  items.sort((a, b) => b.saldo - a.saldo || a.ach - b.ach);
+  const topBottlenecks = items.slice(0, 6);
+
+  if (topBottlenecks.length === 0) {{
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--card-solid); border-radius: 16px; border: 1px solid var(--card-border);">
+        <div style="font-size: 40px; margin-bottom: 10px;">🎉</div>
+        <h3 style="color: var(--success); font-size: 20px; font-weight: 800;">SELURUH ORDER SUDAH TUNTAS (0 SALDO)!</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">Luar biasa! Tidak ada kendala bottleneck tersisa di District Bogor & Sukabumi.</p>
+      </div>
+    `;
+    return;
+  }}
+
+  container.innerHTML = topBottlenecks.map(b => `
     <div class="bottleneck-card ${{b.severity}}">
       <div class="bottleneck-title">
         <span>${{b.title}}</span>
@@ -2590,6 +2634,7 @@ function renderBottlenecks() {{
 // PIC LEADERBOARD
 function renderPICTable() {{
   const tbody = document.getElementById('tbody-pic');
+  if (!tbody) return;
   const search = document.getElementById('search-pic').value.toLowerCase();
 
   const picMap = {{}};
@@ -2669,6 +2714,9 @@ function exportTableCSV() {{
 
 function populateSAFilter() {{
   const select = document.getElementById('filter-psb-sa');
+  if (!select) return;
+  const currentVal = select.value;
+  select.innerHTML = '<option value="ALL">Semua Service Area (SA)</option>';
   const sas = Array.from(new Set(DATA.psb.sto_list.map(s => s.sa))).sort();
   sas.forEach(sa => {{
     const opt = document.createElement('option');
@@ -2676,16 +2724,290 @@ function populateSAFilter() {{
     opt.textContent = sa;
     select.appendChild(opt);
   }});
+  select.value = currentVal || 'ALL';
 }}
 
-window.addEventListener('DOMContentLoaded', () => {{
-  initTheme();
+// DYNAMIC TOP KPI STATS
+function renderExecutiveStats() {{
+  const ass = DATA.assurance.total;
+  const psb = DATA.psb.total;
+  const totSamp = ass.sampling + psb.sampling;
+  const totDone = ass.done + psb.done;
+  const totSaldo = ass.saldo + psb.saldo;
+  const totAch = totSamp > 0 ? (Math.round((totDone / totSamp) * 10000) / 100) : 0;
+  const saldoPct = totSamp > 0 ? (Math.round((totSaldo / totSamp) * 10000) / 100) : 0;
+
+  const gaugeCircle = document.getElementById('gauge-circle');
+  const gaugePct = document.getElementById('kpi-gauge-pct');
+  const realisasiSub = document.getElementById('kpi-realisasi-sub');
+  if (gaugePct) gaugePct.textContent = totAch + '%';
+  if (realisasiSub) realisasiSub.innerHTML = `Realisasi: <strong style="color: var(--success);">${{totDone}}</strong> dari <strong>${{totSamp}}</strong> Sampling`;
+  if (gaugeCircle) {{
+    const radius = 80;
+    const circ = 2 * Math.PI * radius; // 502.65
+    const offset = circ - (circ * totAch) / 100;
+    gaugeCircle.style.strokeDasharray = `${{circ}}`;
+    gaugeCircle.style.strokeDashoffset = `${{offset}}`;
+  }}
+
+  const elTarget = document.getElementById('kpi-total-target');
+  const elTargetSub = document.getElementById('kpi-target-subtext');
+  if (elTarget) elTarget.textContent = totSamp;
+  if (elTargetSub) elTargetSub.innerHTML = `<span>Assurance: <strong>${{ass.sampling}}</strong></span><span>PSB: <strong>${{psb.sampling}}</strong></span>`;
+
+  const elDone = document.getElementById('kpi-total-done');
+  const elDoneSub = document.getElementById('kpi-done-subtext');
+  const elDoneBar = document.getElementById('kpi-done-bar');
+  if (elDone) elDone.textContent = totDone;
+  if (elDoneSub) elDoneSub.innerHTML = `<span>Assurance: <strong>${{ass.done}}</strong></span><span>PSB: <strong>${{psb.done}}</strong></span>`;
+  if (elDoneBar) elDoneBar.style.width = totAch + '%';
+
+  const elSaldo = document.getElementById('kpi-total-saldo');
+  const elSaldoSub = document.getElementById('kpi-saldo-subtext');
+  const elSaldoBar = document.getElementById('kpi-saldo-bar');
+  if (elSaldo) elSaldo.textContent = totSaldo;
+  if (elSaldoSub) elSaldoSub.innerHTML = `<span>Assurance: <strong>${{ass.saldo}}</strong></span><span>PSB: <strong>${{psb.saldo}}</strong></span>`;
+  if (elSaldoBar) elSaldoBar.style.width = saldoPct + '%';
+}}
+
+// DYNAMIC NAVIGATION BADGES
+function renderNavigationBadges() {{
+  const ass = DATA.assurance.total;
+  const psb = DATA.psb.total;
+  const totSaldo = ass.saldo + psb.saldo;
+
+  const bAss = document.getElementById('nav-badge-ass');
+  const bPsb = document.getElementById('nav-badge-psb');
+  const bSaldo = document.getElementById('nav-badge-saldo');
+
+  if (bAss) bAss.textContent = ass.ach + '%';
+  if (bPsb) bPsb.textContent = psb.ach + '%';
+  if (bSaldo) {{
+    bSaldo.textContent = totSaldo + ' Saldo';
+    if (totSaldo === 0) {{
+      bSaldo.style.background = 'rgba(16,185,129,0.25)';
+      bSaldo.style.color = '#34d399';
+    }} else {{
+      bSaldo.style.background = 'rgba(239,68,68,0.25)';
+      bSaldo.style.color = '#f87171';
+    }}
+  }}
+}}
+
+// LIVE SINKRONISASI REALTIME DARI GOOGLE SHEETS
+const GOOGLE_SHEET_ID = "1iCLX_scRmLAMwKrjOS2FkasGwB2q8NOtfzjxxYol8Ow";
+
+async function fetchGoogleSheetGviz(sheetName) {{
+  const url = `https://docs.google.com/spreadsheets/d/${{GOOGLE_SHEET_ID}}/gviz/tq?tqx=out:json&sheet=${{encodeURIComponent(sheetName)}}&t=${{Date.now()}}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${{res.status}}`);
+  const text = await res.text();
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+  if (!match) throw new Error("Format respon Google Sheets tidak sesuai");
+  return JSON.parse(match[1]);
+}}
+
+async function syncGoogleSheetsData(silent = false) {{
+  const btn = document.getElementById('btn-sync-sheet');
+  const icon = document.getElementById('sync-icon');
+  const text = document.getElementById('sync-text');
+  const statusBadge = document.getElementById('sync-status-badge');
+  const cutoffLabel = document.getElementById('cutoff-date-val');
+
+  if (!silent && btn) {{
+    btn.disabled = true;
+    if (icon) icon.textContent = '⏳';
+    if (text) text.textContent = 'Menyinkronkan...';
+  }}
+
+  try {{
+    const [assGviz, psbGviz] = await Promise.all([
+      fetchGoogleSheetGviz('UJI PETIK ASSURANCE'),
+      fetchGoogleSheetGviz('UJI PETIK PSB')
+    ]);
+
+    // Parse ASSURANCE rows
+    const assRows = assGviz.table.rows;
+    const newAssSektors = [];
+    const newGroups = [];
+
+    for (let r = 3; r < Math.min(assRows.length, 33); r++) {{
+      const row = assRows[r];
+      if (!row || !row.c) continue;
+      const c = row.c.map(cell => cell && cell.v !== undefined ? cell.v : null);
+      const no = c[0];
+      const sektor = c[1];
+      const pic = c[2];
+      const samp = Number(c[3]) || 0;
+      const saldo = Number(c[4]) || 0;
+      const done = Number(c[5]) || 0;
+      const ach = Number(c[6]) || 0;
+
+      if (sektor && pic) {{
+        newAssSektors.push({{
+          no: typeof no === 'number' ? no : newAssSektors.length + 1,
+          sektor: String(sektor).trim(),
+          pic: String(pic).trim(),
+          sampling: samp,
+          saldo: saldo,
+          done: done,
+          ach: Math.round(ach * 10000) / 100
+        }});
+      }} else if (!pic && c[0] && String(c[0]).trim() !== 'WITEL BOGOR') {{
+        newGroups.push({{
+          name: String(c[0]).trim(),
+          sampling: samp,
+          saldo: saldo,
+          done: done,
+          ach: Math.round(ach * 10000) / 100
+        }});
+      }}
+    }}
+
+    // Parse PSB rows
+    const psbRows = psbGviz.table.rows;
+    const newPsbSto = [];
+    for (let r = 4; r < Math.min(psbRows.length, 45); r++) {{
+      const row = psbRows[r];
+      if (!row || !row.c) continue;
+      const c = row.c.map(cell => cell && cell.v !== undefined ? cell.v : null);
+      const no = c[1];
+      const sa = c[2];
+      const pic = c[4];
+      const sto = c[5];
+      const samp = Number(c[6]) || 0;
+      const done = Number(c[7]) || 0;
+      const saldo = Number(c[8]) || 0;
+      const qc = Number(c[9]) || 0;
+      const ach = Number(c[10]) || 0;
+
+      if (sto) {{
+        newPsbSto.push({{
+          no: typeof no === 'number' ? no : newPsbSto.length + 1,
+          sa: String(sa || '').trim(),
+          pic: String(pic || '').trim(),
+          sto: String(sto).trim(),
+          sampling: samp,
+          done: done,
+          saldo: saldo,
+          qc: Math.round(qc * 10000) / 100,
+          ach: Math.round(ach * 10000) / 100
+        }});
+      }}
+    }}
+
+    // Update DATA state
+    if (newAssSektors.length > 0) {{
+      DATA.assurance.sektors = newAssSektors;
+      const totSamp = newAssSektors.reduce((a, b) => a + b.sampling, 0);
+      const totDone = newAssSektors.reduce((a, b) => a + b.done, 0);
+      const totSaldo = newAssSektors.reduce((a, b) => a + b.saldo, 0);
+      DATA.assurance.total = {{
+        sampling: totSamp,
+        done: totDone,
+        saldo: totSaldo,
+        ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
+      }};
+      if (newGroups.length > 0) DATA.assurance.groups = newGroups;
+    }}
+
+    if (newPsbSto.length > 0) {{
+      DATA.psb.sto_list = newPsbSto;
+      const totSamp = newPsbSto.reduce((a, b) => a + b.sampling, 0);
+      const totDone = newPsbSto.reduce((a, b) => a + b.done, 0);
+      const totSaldo = newPsbSto.reduce((a, b) => a + b.saldo, 0);
+      DATA.psb.total = {{
+        sampling: totSamp,
+        done: totDone,
+        saldo: totSaldo,
+        ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
+      }};
+    }}
+
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('id-ID', {{ day: '2-digit', month: 'short', year: 'numeric' }}) + ', ' + now.toLocaleTimeString('id-ID', {{ hour: '2-digit', minute: '2-digit', second: '2-digit' }});
+    DATA.meta.refreshed_at = timeStr;
+
+    // Cache to localStorage
+    try {{
+      localStorage.setItem('uji_petik_live_cache', JSON.stringify({{ data: DATA, timestamp: Date.now() }}));
+    }} catch(e) {{}}
+
+    // Update UI elements
+    if (cutoffLabel) cutoffLabel.textContent = timeStr;
+    if (statusBadge) {{
+      statusBadge.style.display = 'inline-flex';
+      statusBadge.innerHTML = '🟢 Terhubung Google Sheet: ' + now.toLocaleTimeString('id-ID', {{ hour: '2-digit', minute: '2-digit' }});
+    }}
+
+    renderAll();
+
+    if (!silent) {{
+      alert(`✅ Berhasil Sinkronisasi Langsung dari Google Sheet!\\n\\n` +
+            `• Assurance: ${{DATA.assurance.total.done}}/${{DATA.assurance.total.sampling}} (${{DATA.assurance.total.ach}}%) • Saldo: ${{DATA.assurance.total.saldo}}\\n` +
+            `• PSB: ${{DATA.psb.total.done}}/${{DATA.psb.total.sampling}} (${{DATA.psb.total.ach}}%) • Saldo: ${{DATA.psb.total.saldo}}\\n` +
+            `• Total Saldo Distrik: ${{DATA.assurance.total.saldo + DATA.psb.total.saldo}} Saldo`);
+    }}
+  }} catch (err) {{
+    console.warn("Live sync Google Sheet error:", err);
+    if (statusBadge) {{
+      statusBadge.innerHTML = '🟡 Mode Offline / Data Tersimpan';
+    }}
+    if (!silent) {{
+      alert("⚠️ Gagal sinkronisasi langsung dari Google Sheet (mungkin kendala jaringan). Menggunakan data tersimpan terakhir.");
+    }}
+  }} finally {{
+    if (btn) {{
+      btn.disabled = false;
+      if (icon) icon.textContent = '🔄';
+      if (text) text.textContent = 'Sinkron Sheet';
+    }}
+  }}
+}}
+
+// MASTER RENDER ALL
+function renderAll() {{
+  renderExecutiveStats();
+  renderNavigationBadges();
   renderOverviewCharts();
   renderAssuranceTable();
   populateSAFilter();
   renderPSBTable();
   renderBottlenecks();
   renderPICTable();
+  if (document.getElementById('portrait-modal').classList.contains('active')) {{
+    selectPortraitView(activePortraitView);
+  }}
+}}
+
+window.addEventListener('DOMContentLoaded', () => {{
+  initTheme();
+
+  // 1. Restore from localStorage cache if available
+  try {{
+    const cached = localStorage.getItem('uji_petik_live_cache');
+    if (cached) {{
+      const parsed = JSON.parse(cached);
+      if (parsed && parsed.data) {{
+        DATA.assurance = parsed.data.assurance;
+        DATA.psb = parsed.data.psb;
+        if (parsed.data.meta) DATA.meta = parsed.data.meta;
+        const cutoffLabel = document.getElementById('cutoff-date-val');
+        if (cutoffLabel && DATA.meta.refreshed_at) cutoffLabel.textContent = DATA.meta.refreshed_at;
+      }}
+    }}
+  }} catch(e) {{}}
+
+  // 2. Render all components immediately
+  renderAll();
+
+  // 3. Automatically trigger silent live sync from Google Sheet in background
+  syncGoogleSheetsData(true);
+
+  // 4. Auto-sync every 3 minutes while dashboard is kept open
+  setInterval(() => {{
+    syncGoogleSheetsData(true);
+  }}, 180000);
 }});
 </script>
 
@@ -2695,4 +3017,4 @@ window.addEventListener('DOMContentLoaded', () => {{
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print('Successfully replaced Image 1 with Image 2 in Portrait JPG mode!')
+print('Successfully built dashboard with Google Sheet Live Sync!')

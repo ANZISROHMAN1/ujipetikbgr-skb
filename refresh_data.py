@@ -155,6 +155,29 @@ def parse_and_export():
                 'status': str(ws_psb.cell(r, 53).value or '').strip()
             })
 
+    clean_ass_sektors = [s for s in ass_sektors if not s['is_subtotal']]
+    ass_groups = []
+    for s in ass_sektors:
+        lbl = s['label'].strip()
+        if s['is_subtotal'] and lbl and lbl != 'WITEL BOGOR':
+            ass_groups.append({
+                'name': lbl,
+                'sampling': s['sampling'],
+                'saldo': s['saldo'],
+                'done': s['done'],
+                'ach': s['ach']
+            })
+
+    tot_ass_samp = sum(s['sampling'] for s in clean_ass_sektors)
+    tot_ass_done = sum(s['done'] for s in clean_ass_sektors)
+    tot_ass_saldo = sum(s['saldo'] for s in clean_ass_sektors)
+    tot_ass_ach = round((tot_ass_done / tot_ass_samp) * 100, 2) if tot_ass_samp > 0 else 0
+
+    tot_psb_samp = sum(s['sampling'] for s in psb_sto)
+    tot_psb_done = sum(s['done'] for s in psb_sto)
+    tot_psb_saldo = sum(s['saldo'] for s in psb_sto)
+    tot_psb_ach = round((tot_psb_done / tot_psb_samp) * 100, 2) if tot_psb_samp > 0 else 0
+
     output_data = {
         'meta': {
             'title': 'DASHBOARD MONITORING UJI PETIK DISTRICT BOGOR',
@@ -164,18 +187,18 @@ def parse_and_export():
             'source_spreadsheet': 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/edit'
         },
         'assurance': {
-            'total': {'sampling': 261, 'saldo': 21, 'done': 240, 'ach': 91.95},
-            'groups': [
+            'total': {'sampling': tot_ass_samp, 'saldo': tot_ass_saldo, 'done': tot_ass_done, 'ach': tot_ass_ach},
+            'groups': ass_groups if ass_groups else [
                 {'name': 'CIBINONG', 'sampling': 67, 'saldo': 1, 'done': 66, 'ach': 98.51},
-                {'name': 'KUJANG', 'sampling': 104, 'saldo': 4, 'done': 100, 'ach': 96.15},
-                {'name': 'SENTUL', 'sampling': 50, 'saldo': 2, 'done': 48, 'ach': 96.00},
-                {'name': 'SUKABUMI', 'sampling': 40, 'saldo': 14, 'done': 26, 'ach': 65.00}
+                {'name': 'KUJANG', 'sampling': 104, 'saldo': 3, 'done': 101, 'ach': 97.12},
+                {'name': 'SENTUL', 'sampling': 50, 'saldo': 0, 'done': 50, 'ach': 100.00},
+                {'name': 'SUKABUMI', 'sampling': 40, 'saldo': 12, 'done': 28, 'ach': 70.00}
             ],
-            'sektors': [s for s in ass_sektors if not s['is_subtotal']],
+            'sektors': clean_ass_sektors,
             'details': ass_details
         },
         'psb': {
-            'total': {'sampling': 94, 'saldo': 19, 'done': 75, 'ach': 79.79},
+            'total': {'sampling': tot_psb_samp, 'saldo': tot_psb_saldo, 'done': tot_psb_done, 'ach': tot_psb_ach},
             'sa_summary': psb_sa,
             'sto_list': psb_sto,
             'details': psb_details
