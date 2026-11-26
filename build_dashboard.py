@@ -1460,43 +1460,7 @@ html_content = f'''<!DOCTYPE html>
 
   <!-- TAB 2: UJI PETIK ASSURANCE -->
   <div id="tab-assurance" class="tab-content">
-    <div class="area-scorecards-grid">
-      <div class="area-scorecard">
-        <div class="area-card-top">
-          <span class="area-name">Area CIBINONG</span>
-          <span class="area-pct" style="color: var(--success);">98.51%</span>
-        </div>
-        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>67</strong> • Done: <strong>66</strong></div>
-        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 1 Order</div>
-      </div>
-
-      <div class="area-scorecard">
-        <div class="area-card-top">
-          <span class="area-name">Area KUJANG</span>
-          <span class="area-pct" style="color: var(--success);">96.15%</span>
-        </div>
-        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>104</strong> • Done: <strong>100</strong></div>
-        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 4 Order</div>
-      </div>
-
-      <div class="area-scorecard">
-        <div class="area-card-top">
-          <span class="area-name">Area SENTUL</span>
-          <span class="area-pct" style="color: var(--success);">96.00%</span>
-        </div>
-        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>50</strong> • Done: <strong>48</strong></div>
-        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 700;">Sisa Saldo: 2 Order</div>
-      </div>
-
-      <div class="area-scorecard" style="border-left: 4px solid var(--danger);">
-        <div class="area-card-top">
-          <span class="area-name" style="color: var(--danger);">Area SUKABUMI</span>
-          <span class="area-pct" style="color: var(--danger);">65.00%</span>
-        </div>
-        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>40</strong> • Done: <strong>26</strong></div>
-        <div style="margin-top: 6px; font-size: 12px; color: var(--danger); font-weight: 800;">Sisa Saldo: 14 Order (Kritis)</div>
-      </div>
-    </div>
+    <div class="area-scorecards-grid" id="assurance-area-cards"></div>
 
     <div class="panel">
       <div class="panel-header">
@@ -1530,6 +1494,7 @@ html_content = f'''<!DOCTYPE html>
             </tr>
           </thead>
           <tbody id="tbody-assurance"></tbody>
+          <tfoot id="tfoot-assurance"></tfoot>
         </table>
       </div>
     </div>
@@ -1540,18 +1505,18 @@ html_content = f'''<!DOCTYPE html>
     <div class="stat-cards-grid" style="margin-bottom: 24px;">
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Target PSB</span><span>📡</span></div>
-        <div class="stat-val">94</div>
-        <div class="stat-subtext">Total 34 STO di District Bogor</div>
+        <div class="stat-val" id="psb-card-target">{tot_psb['sampling']}</div>
+        <div class="stat-subtext" id="psb-card-subtarget">Total {len(data_dict['psb']['sto_list'])} STO di District Bogor</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Done PSB</span><span>✅</span></div>
-        <div class="stat-val" style="color: var(--success);">75</div>
-        <div class="stat-subtext">Capaian: 79.79%</div>
+        <div class="stat-val" id="psb-card-done" style="color: var(--success);">{tot_psb['done']}</div>
+        <div class="stat-subtext" id="psb-card-ach">Capaian: {tot_psb['ach']}%</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Saldo PSB</span><span>⏳</span></div>
-        <div class="stat-val" style="color: var(--danger);">19</div>
-        <div class="stat-subtext">Terpusat di Sukabumi & Cibadak</div>
+        <div class="stat-val" id="psb-card-saldo" style="color: var(--danger);">{tot_psb['saldo']}</div>
+        <div class="stat-subtext" id="psb-card-subsaldo">Sisa order belum uji</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Kualitas QC</span><span>⭐</span></div>
@@ -1596,6 +1561,7 @@ html_content = f'''<!DOCTYPE html>
             </tr>
           </thead>
           <tbody id="tbody-psb"></tbody>
+          <tfoot id="tfoot-psb"></tfoot>
         </table>
       </div>
     </div>
@@ -2588,6 +2554,43 @@ function renderAssuranceTable() {{
       </tr>
     `;
   }}).join('');
+
+  const tfoot = document.getElementById('tfoot-assurance');
+  if (tfoot) {{
+    const tot = DATA.assurance.total;
+    tfoot.innerHTML = `
+      <tr style="background: var(--card-solid); font-weight: 800; border-top: 2px solid var(--card-border);">
+        <td colspan="3" style="text-align: right; font-size: 12px;">TOTAL ASSURANCE (${{DATA.assurance.sektors.length}} SEKTOR):</td>
+        <td class="num-col" style="color: var(--primary); font-size: 13px;">${{tot.sampling}}</td>
+        <td class="num-col" style="color: var(--success); font-size: 13px;">${{tot.done}}</td>
+        <td class="num-col" style="color: var(--danger); font-size: 14px;">${{tot.saldo}}</td>
+        <td colspan="2" class="num-col" style="color: var(--success); font-size: 13px;">${{tot.ach}}%</td>
+        <td><span class="badge ${{tot.saldo === 0 ? 'badge-success' : 'badge-warning'}}">${{tot.saldo}} SALDO</span></td>
+      </tr>
+    `;
+  }}
+}}
+
+// AREA SCORECARDS (ASSURANCE)
+function renderAssuranceAreaCards() {{
+  const container = document.getElementById('assurance-area-cards');
+  if (!container || !DATA.assurance.groups) return;
+  container.innerHTML = DATA.assurance.groups.map(g => {{
+    const isCritical = g.saldo >= 5;
+    const borderStyle = isCritical ? 'border-left: 4px solid var(--danger);' : '';
+    const pctColor = g.ach >= 90 ? 'var(--success)' : (g.ach >= 75 ? 'var(--warning)' : 'var(--danger)');
+    const saldoColor = g.saldo > 0 ? 'var(--danger)' : 'var(--success)';
+    return `
+      <div class="area-scorecard" style="${{borderStyle}}">
+        <div class="area-card-top">
+          <span class="area-name" style="${{isCritical ? 'color: var(--danger);' : ''}}">Area ${{g.name}}</span>
+          <span class="area-pct" style="color: ${{pctColor}};">${{g.ach}}%</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);">Sampling: <strong>${{g.sampling}}</strong> • Done: <strong>${{g.done}}</strong></div>
+        <div style="margin-top: 6px; font-size: 12px; color: ${{saldoColor}}; font-weight: ${{isCritical ? '800' : '700'}};">Sisa Saldo: ${{g.saldo}} Order${{isCritical ? ' (Kritis)' : ''}}</div>
+      </div>
+    `;
+  }}).join('');
 }}
 
 // PSB TABLE
@@ -2634,6 +2637,21 @@ function renderPSBTable() {{
       </tr>
     `;
   }}).join('');
+
+  const tfoot = document.getElementById('tfoot-psb');
+  if (tfoot) {{
+    const tot = DATA.psb.total;
+    tfoot.innerHTML = `
+      <tr style="background: var(--card-solid); font-weight: 800; border-top: 2px solid var(--card-border);">
+        <td colspan="4" style="text-align: right; font-size: 12px;">TOTAL PSB (${{DATA.psb.sto_list.length}} STO):</td>
+        <td class="num-col" style="color: var(--primary); font-size: 13px;">${{tot.sampling}}</td>
+        <td class="num-col" style="color: var(--success); font-size: 13px;">${{tot.done}}</td>
+        <td class="num-col" style="color: var(--danger); font-size: 14px;">${{tot.saldo}}</td>
+        <td colspan="2" class="num-col" style="color: var(--warning); font-size: 13px;">${{tot.ach}}%</td>
+        <td><span class="badge ${{tot.saldo === 0 ? 'badge-success' : 'badge-warning'}}">${{tot.saldo}} SALDO</span></td>
+      </tr>
+    `;
+  }}
 }}
 
 // DYNAMIC BOTTLENECK CARDS (AUTOMATICALLY EXTRACTED FROM LIVE DATA)
@@ -2844,6 +2862,15 @@ function renderExecutiveStats() {{
 
   const elAlertSaldo = document.getElementById('alert-total-saldo');
   if (elAlertSaldo) elAlertSaldo.textContent = totSaldo + ' saldo';
+
+  const cardTarget = document.getElementById('psb-card-target');
+  const cardDone = document.getElementById('psb-card-done');
+  const cardAch = document.getElementById('psb-card-ach');
+  const cardSaldo = document.getElementById('psb-card-saldo');
+  if (cardTarget) cardTarget.textContent = psb.sampling;
+  if (cardDone) cardDone.textContent = psb.done;
+  if (cardAch) cardAch.textContent = `Capaian: ${{psb.ach}}%`;
+  if (cardSaldo) cardSaldo.textContent = psb.saldo;
 }}
 
 // DYNAMIC NAVIGATION BADGES
@@ -3046,6 +3073,7 @@ function renderAll() {{
   renderExecutiveStats();
   renderNavigationBadges();
   renderOverviewCharts();
+  renderAssuranceAreaCards();
   renderAssuranceTable();
   populateSAFilter();
   renderPSBTable();
