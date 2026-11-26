@@ -3016,15 +3016,40 @@ async function syncGoogleSheetsData(silent = false) {{
 
     if (newPsbSto.length > 0) {{
       DATA.psb.sto_list = newPsbSto;
-      const totSamp = newPsbSto.reduce((a, b) => a + b.sampling, 0);
-      const totDone = newPsbSto.reduce((a, b) => a + b.done, 0);
-      const totSaldo = newPsbSto.reduce((a, b) => a + b.saldo, 0);
-      DATA.psb.total = {{
-        sampling: totSamp,
-        done: totDone,
-        saldo: totSaldo,
-        ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
-      }};
+      
+      // Deteksi baris TOTAL resmi di Google Sheet (baris 38/39)
+      let officialTotal = null;
+      for (let r = psbRows.length - 1; r >= 30; r--) {{
+        const row = psbRows[r];
+        if (!row || !row.c) continue;
+        const samp = Number(row.c[6] && row.c[6].v);
+        const done = Number(row.c[7] && row.c[7].v);
+        const saldo = Number(row.c[8] && row.c[8].v);
+        if (samp > 50 && done > 0) {{
+          const qc = Number(row.c[9] && row.c[9].v) || (done / samp);
+          officialTotal = {{
+            sampling: samp,
+            done: done,
+            saldo: saldo,
+            ach: Math.round(qc * 10000) / 100
+          }};
+          break;
+        }}
+      }}
+
+      if (officialTotal) {{
+        DATA.psb.total = officialTotal;
+      }} else {{
+        const totSamp = newPsbSto.reduce((a, b) => a + b.sampling, 0);
+        const totDone = newPsbSto.reduce((a, b) => a + b.done, 0);
+        const totSaldo = newPsbSto.reduce((a, b) => a + b.saldo, 0);
+        DATA.psb.total = {{
+          sampling: totSamp,
+          done: totDone,
+          saldo: totSaldo,
+          ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
+        }};
+      }}
     }}
 
     const now = new Date();
@@ -3033,7 +3058,7 @@ async function syncGoogleSheetsData(silent = false) {{
 
     // Cache to localStorage
     try {{
-      localStorage.setItem('uji_petik_live_cache', JSON.stringify({{ data: DATA, timestamp: Date.now() }}));
+      localStorage.setItem('uji_petik_live_cache_v3', JSON.stringify({{ data: DATA, timestamp: Date.now() }}));
     }} catch(e) {{}}
 
     // Update UI elements
@@ -3089,7 +3114,7 @@ window.addEventListener('DOMContentLoaded', () => {{
 
   // 1. Restore from localStorage cache if available
   try {{
-    const cached = localStorage.getItem('uji_petik_live_cache');
+    const cached = localStorage.getItem('uji_petik_live_cache_v3');
     if (cached) {{
       const parsed = JSON.parse(cached);
       if (parsed && parsed.data) {{

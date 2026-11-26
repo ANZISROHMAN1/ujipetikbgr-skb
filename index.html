@@ -1288,7 +1288,7 @@
     </button>
     <button class="nav-tab" onclick="switchTab('psb')">
       <span>📡 Uji Petik PSB</span>
-      <span class="badge" id="nav-badge-psb">89.69%</span>
+      <span class="badge" id="nav-badge-psb">89.36%</span>
     </button>
     <button class="nav-tab" onclick="switchTab('bottleneck')">
       <span>⚠️ Analisis Saldo & Bottleneck</span>
@@ -1309,15 +1309,15 @@
         <div class="radial-chart-wrapper">
           <svg viewBox="0 0 190 190">
             <circle class="radial-track" cx="95" cy="95" r="80"></circle>
-            <circle class="radial-fill" id="gauge-circle" cx="95" cy="95" r="80" style="stroke-dasharray: 502.65; stroke-dashoffset: 36.49;"></circle>
+            <circle class="radial-fill" id="gauge-circle" cx="95" cy="95" r="80" style="stroke-dasharray: 502.65; stroke-dashoffset: 36.79;"></circle>
           </svg>
           <div class="gauge-center-text">
-            <div class="gauge-percentage" id="kpi-gauge-pct">92.74%</div>
+            <div class="gauge-percentage" id="kpi-gauge-pct">92.68%</div>
             <div class="gauge-label">TARGET 100%</div>
           </div>
         </div>
         <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="kpi-realisasi-sub">
-          Realisasi: <strong style="color: var(--success);">332</strong> dari <strong>358</strong> Sampling
+          Realisasi: <strong style="color: var(--success);">329</strong> dari <strong>355</strong> Sampling
         </div>
       </div>
 
@@ -1328,10 +1328,10 @@
             <div class="stat-card-icon" style="background: var(--primary-glow); color: var(--primary);">🎯</div>
           </div>
           <div>
-            <div class="stat-val" id="kpi-total-target">358</div>
+            <div class="stat-val" id="kpi-total-target">355</div>
             <div class="stat-subtext" id="kpi-target-subtext">
               <span>Assurance: <strong>261</strong></span>
-              <span>PSB: <strong>97</strong></span>
+              <span>PSB: <strong>94</strong></span>
             </div>
             <div class="stat-progress-bar">
               <div class="stat-progress-fill" style="width: 100%; background: var(--primary);"></div>
@@ -1345,13 +1345,13 @@
             <div class="stat-card-icon" style="background: var(--success-glow); color: var(--success);">✅</div>
           </div>
           <div>
-            <div class="stat-val" id="kpi-total-done" style="color: var(--success);">332</div>
+            <div class="stat-val" id="kpi-total-done" style="color: var(--success);">329</div>
             <div class="stat-subtext" id="kpi-done-subtext">
               <span>Assurance: <strong>245</strong></span>
-              <span>PSB: <strong>87</strong></span>
+              <span>PSB: <strong>84</strong></span>
             </div>
             <div class="stat-progress-bar">
-              <div class="stat-progress-fill" id="kpi-done-bar" style="width: 92.74%; background: var(--success);"></div>
+              <div class="stat-progress-fill" id="kpi-done-bar" style="width: 92.68%; background: var(--success);"></div>
             </div>
           </div>
         </div>
@@ -1368,7 +1368,7 @@
               <span>PSB: <strong>10</strong></span>
             </div>
             <div class="stat-progress-bar">
-              <div class="stat-progress-fill" id="kpi-saldo-bar" style="width: 7.26%; background: var(--danger);"></div>
+              <div class="stat-progress-fill" id="kpi-saldo-bar" style="width: 7.32%; background: var(--danger);"></div>
             </div>
           </div>
         </div>
@@ -1488,13 +1488,13 @@
     <div class="stat-cards-grid" style="margin-bottom: 24px;">
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Target PSB</span><span>📡</span></div>
-        <div class="stat-val" id="psb-card-target">97</div>
+        <div class="stat-val" id="psb-card-target">94</div>
         <div class="stat-subtext" id="psb-card-subtarget">Total 34 STO di District Bogor</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Done PSB</span><span>✅</span></div>
-        <div class="stat-val" id="psb-card-done" style="color: var(--success);">87</div>
-        <div class="stat-subtext" id="psb-card-ach">Capaian: 89.69%</div>
+        <div class="stat-val" id="psb-card-done" style="color: var(--success);">84</div>
+        <div class="stat-subtext" id="psb-card-ach">Capaian: 89.36%</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-header"><span class="stat-card-title">Saldo PSB</span><span>⏳</span></div>
@@ -2475,10 +2475,10 @@ const DATA = {
   },
   "psb": {
     "total": {
-      "sampling": 97,
+      "sampling": 94,
       "saldo": 10,
-      "done": 87,
-      "ach": 89.69
+      "done": 84,
+      "ach": 89.36
     },
     "sa_summary": [
       {
@@ -5018,15 +5018,40 @@ async function syncGoogleSheetsData(silent = false) {
 
     if (newPsbSto.length > 0) {
       DATA.psb.sto_list = newPsbSto;
-      const totSamp = newPsbSto.reduce((a, b) => a + b.sampling, 0);
-      const totDone = newPsbSto.reduce((a, b) => a + b.done, 0);
-      const totSaldo = newPsbSto.reduce((a, b) => a + b.saldo, 0);
-      DATA.psb.total = {
-        sampling: totSamp,
-        done: totDone,
-        saldo: totSaldo,
-        ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
-      };
+      
+      // Deteksi baris TOTAL resmi di Google Sheet (baris 38/39)
+      let officialTotal = null;
+      for (let r = psbRows.length - 1; r >= 30; r--) {
+        const row = psbRows[r];
+        if (!row || !row.c) continue;
+        const samp = Number(row.c[6] && row.c[6].v);
+        const done = Number(row.c[7] && row.c[7].v);
+        const saldo = Number(row.c[8] && row.c[8].v);
+        if (samp > 50 && done > 0) {
+          const qc = Number(row.c[9] && row.c[9].v) || (done / samp);
+          officialTotal = {
+            sampling: samp,
+            done: done,
+            saldo: saldo,
+            ach: Math.round(qc * 10000) / 100
+          };
+          break;
+        }
+      }
+
+      if (officialTotal) {
+        DATA.psb.total = officialTotal;
+      } else {
+        const totSamp = newPsbSto.reduce((a, b) => a + b.sampling, 0);
+        const totDone = newPsbSto.reduce((a, b) => a + b.done, 0);
+        const totSaldo = newPsbSto.reduce((a, b) => a + b.saldo, 0);
+        DATA.psb.total = {
+          sampling: totSamp,
+          done: totDone,
+          saldo: totSaldo,
+          ach: totSamp > 0 ? Math.round((totDone / totSamp) * 10000) / 100 : 0
+        };
+      }
     }
 
     const now = new Date();
@@ -5035,7 +5060,7 @@ async function syncGoogleSheetsData(silent = false) {
 
     // Cache to localStorage
     try {
-      localStorage.setItem('uji_petik_live_cache', JSON.stringify({ data: DATA, timestamp: Date.now() }));
+      localStorage.setItem('uji_petik_live_cache_v3', JSON.stringify({ data: DATA, timestamp: Date.now() }));
     } catch(e) {}
 
     // Update UI elements
@@ -5091,7 +5116,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 1. Restore from localStorage cache if available
   try {
-    const cached = localStorage.getItem('uji_petik_live_cache');
+    const cached = localStorage.getItem('uji_petik_live_cache_v3');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (parsed && parsed.data) {

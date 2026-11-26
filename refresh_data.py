@@ -173,10 +173,22 @@ def parse_and_export():
     tot_ass_saldo = sum(s['saldo'] for s in clean_ass_sektors)
     tot_ass_ach = round((tot_ass_done / tot_ass_samp) * 100, 2) if tot_ass_samp > 0 else 0
 
-    tot_psb_samp = sum(s['sampling'] for s in psb_sto)
-    tot_psb_done = sum(s['done'] for s in psb_sto)
-    tot_psb_saldo = sum(s['saldo'] for s in psb_sto)
-    tot_psb_ach = round((tot_psb_done / tot_psb_samp) * 100, 2) if tot_psb_samp > 0 else 0
+    # Cek baris total resmi di sheet (baris 39 di Excel / openpyxl)
+    sheet_total_samp = ws_psb.cell(39, 7).value
+    sheet_total_done = ws_psb.cell(39, 8).value
+    sheet_total_saldo = ws_psb.cell(39, 9).value
+    sheet_total_qc = ws_psb.cell(39, 10).value
+
+    if sheet_total_samp and isinstance(sheet_total_samp, (int, float)) and sheet_total_samp > 50:
+        tot_psb_samp = int(sheet_total_samp)
+        tot_psb_done = int(sheet_total_done)
+        tot_psb_saldo = int(sheet_total_saldo)
+        tot_psb_ach = round(float(sheet_total_qc) * 100, 2)
+    else:
+        tot_psb_samp = sum(s['sampling'] for s in psb_sto)
+        tot_psb_done = sum(s['done'] for s in psb_sto)
+        tot_psb_saldo = sum(s['saldo'] for s in psb_sto)
+        tot_psb_ach = round((tot_psb_done / tot_psb_samp) * 100, 2) if tot_psb_samp > 0 else 0
 
     output_data = {
         'meta': {

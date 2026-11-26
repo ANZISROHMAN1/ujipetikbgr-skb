@@ -753,10 +753,10 @@
   },
   "psb": {
     "total": {
-      "sampling": 97,
+      "sampling": 94,
       "saldo": 10,
-      "done": 87,
-      "ach": 89.69
+      "done": 84,
+      "ach": 89.36
     },
     "sa_summary": [
       {
