@@ -1397,8 +1397,8 @@
       <div class="alert-left">
         <div class="alert-icon-box">🚨</div>
         <div class="alert-text">
-          <h4>Fokus Intervensi: Wilayah Sukabumi & Cibadak Menyumbang 82.5% Saldo Tertinggal!</h4>
-          <p>Dari total <strong>40 saldo</strong> tersisa di District Bogor, <strong>33 saldo</strong> berada di Sektor <strong>Cibadak</strong> dan <strong>Sukabumi</strong>. Segera tindak lanjuti sebelum cut-off operasional.</p>
+          <h4>Fokus Intervensi Saldo Tertinggal</h4>
+          <p>Dari total <strong id="alert-total-saldo">26 saldo</strong> tersisa di District Bogor & Sukabumi, segera selesaikan sebelum cut-off operasional.</p>
         </div>
       </div>
       <button onclick="switchTab('bottleneck')" class="btn btn-outline" style="flex-shrink: 0;">
@@ -3856,7 +3856,7 @@ function selectPortraitView(viewType) {
 }
 
 // COMMON EXECUTIVE SUMMARY BANNER (FOTO KE-2: 4 KPI TILES + PROGRESS CAPAIAN PER STREAM DYNAMIC)
-function getExecutiveBannerHtml() {
+function getExecutiveBannerHtml(viewType = 'overview') {
   const ass = DATA.assurance.total;
   const psb = DATA.psb.total;
   const totSamp = ass.sampling + psb.sampling;
@@ -3864,52 +3864,125 @@ function getExecutiveBannerHtml() {
   const totSaldo = ass.saldo + psb.saldo;
   const totAch = totSamp > 0 ? (Math.round((totDone / totSamp) * 10000) / 100) : 0;
 
+  let targetVal, targetSub;
+  let doneVal, doneSub;
+  let saldoVal, saldoSub;
+  let achVal, achSub, achLabel;
+  let progressBarHtml = '';
+
+  if (viewType === 'assurance') {
+    targetVal = ass.sampling;
+    targetSub = `${DATA.assurance.sektors.length} Sektor Assurance`;
+    doneVal = ass.done;
+    doneSub = `Tercapai ${ass.ach}%`;
+    saldoVal = ass.saldo;
+    saldoSub = `Sisa Belum Uji`;
+    achLabel = '% ACH';
+    achVal = `${ass.ach}%`;
+    achSub = `Kualitas OK: 100%`;
+
+    progressBarHtml = `
+      <div class="portrait-section" style="margin-top: 14px; margin-bottom: 20px;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span>📊 Capaian Uji Petik Assurance (${DATA.assurance.sektors.length} Sektor)</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
+        </div>
+        <div class="bar-row" style="margin-bottom: 2px;">
+          <div class="bar-label" style="width: 170px;"><strong>Assurance (${DATA.assurance.sektors.length} Sektor)</strong></div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${ass.ach}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${ass.ach}%</div>
+          </div>
+          <div class="bar-value">${ass.done}/${ass.sampling} (${ass.saldo} Saldo Tersisa)</div>
+        </div>
+      </div>
+    `;
+  } else if (viewType === 'psb') {
+    targetVal = psb.sampling;
+    targetSub = `${DATA.psb.sto_list.length} STO Pasang Baru`;
+    doneVal = psb.done;
+    doneSub = `Tercapai ${psb.ach}%`;
+    saldoVal = psb.saldo;
+    saldoSub = `Sisa Belum Uji`;
+    achLabel = '% QC';
+    achVal = `${psb.ach}%`;
+    achSub = `Kualitas OK: 100%`;
+
+    progressBarHtml = `
+      <div class="portrait-section" style="margin-top: 14px; margin-bottom: 20px;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span>📊 Capaian Uji Petik Pasang Baru (${DATA.psb.sto_list.length} STO)</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
+        </div>
+        <div class="bar-row" style="margin-bottom: 2px;">
+          <div class="bar-label" style="width: 170px;"><strong>PSB (${DATA.psb.sto_list.length} STO)</strong></div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${psb.ach}%; background: linear-gradient(90deg, #10b981, #34d399);">${psb.ach}%</div>
+          </div>
+          <div class="bar-value">${psb.done}/${psb.sampling} (${psb.saldo} Saldo Tersisa)</div>
+        </div>
+      </div>
+    `;
+  } else {
+    targetVal = totSamp;
+    targetSub = `Ass ${ass.sampling} • PSB ${psb.sampling}`;
+    doneVal = totDone;
+    doneSub = `Tercapai ${totAch}%`;
+    saldoVal = totSaldo;
+    saldoSub = `Ass ${ass.saldo} • PSB ${psb.saldo}`;
+    achLabel = '% ACH';
+    achVal = `${totAch}%`;
+    achSub = `QC OK: 100%`;
+
+    progressBarHtml = `
+      <div class="portrait-section" style="margin-top: 14px; margin-bottom: 20px;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span>📊 Progress Capaian per Stream Layanan</span>
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
+        </div>
+        <div class="bar-row" style="margin-bottom: 10px;">
+          <div class="bar-label" style="width: 170px;"><strong>Assurance (${DATA.assurance.sektors.length} Sektor)</strong></div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${ass.ach}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${ass.ach}%</div>
+          </div>
+          <div class="bar-value">${ass.done}/${ass.sampling} (${ass.saldo} Saldo)</div>
+        </div>
+        <div class="bar-row" style="margin-bottom: 2px;">
+          <div class="bar-label" style="width: 170px;"><strong>PSB (${DATA.psb.sto_list.length} STO)</strong></div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${psb.ach}%; background: linear-gradient(90deg, #10b981, #34d399);">${psb.ach}%</div>
+          </div>
+          <div class="bar-value">${psb.done}/${psb.sampling} (${psb.saldo} Saldo)</div>
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <!-- 4 KPI TILES -->
     <div class="portrait-stat-grid">
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">TARGET</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); margin-top: 3px;">${totSamp}</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass ${ass.sampling} • PSB ${psb.sampling}</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); margin-top: 3px;">${targetVal}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">${targetSub}</div>
       </div>
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">DONE</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--success); margin-top: 3px;">${totDone}</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Tercapai ${totAch}%</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--success); margin-top: 3px;">${doneVal}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">${doneSub}</div>
       </div>
       <div class="portrait-stat-item">
         <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">SALDO</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--danger); margin-top: 3px;">${totSaldo}</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">Ass ${ass.saldo} • PSB ${psb.saldo}</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--danger); margin-top: 3px;">${saldoVal}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">${saldoSub}</div>
       </div>
       <div class="portrait-stat-item">
-        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">% ACH</div>
-        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 3px;">${totAch}%</div>
-        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">QC OK: 100%</div>
+        <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em;">${achLabel}</div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 3px;">${achVal}</div>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px;">${achSub}</div>
       </div>
     </div>
 
-    <!-- PROGRESS CAPAIAN PER STREAM -->
-    <div class="portrait-section" style="margin-top: 14px; margin-bottom: 20px;">
-      <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <span>📊 Progress Capaian per Stream</span>
-        <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Target: 100%</span>
-      </div>
-      <div class="bar-row" style="margin-bottom: 10px;">
-        <div class="bar-label" style="width: 155px;"><strong>Assurance (${DATA.assurance.sektors.length} Sektor)</strong></div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width: ${ass.ach}%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">${ass.ach}%</div>
-        </div>
-        <div class="bar-value">${ass.done}/${ass.sampling}</div>
-      </div>
-      <div class="bar-row" style="margin-bottom: 2px;">
-        <div class="bar-label" style="width: 155px;"><strong>PSB (${DATA.psb.sto_list.length} STO)</strong></div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width: ${psb.ach}%; background: linear-gradient(90deg, #10b981, #34d399);">${psb.ach}%</div>
-        </div>
-        <div class="bar-value">${psb.done}/${psb.sampling}</div>
-      </div>
-    </div>
+    ${progressBarHtml}
   `;
 }
 
@@ -3997,7 +4070,7 @@ function renderPSBPortrait(container) {
     </div>
 
     <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
-    ${getExecutiveBannerHtml()}
+    ${getExecutiveBannerHtml('psb')}
 
     <!-- 2-COLUMN BALANCED TABLES (17 STO LEFT & 17 STO RIGHT) -->
     <div class="portrait-grid-2col">
@@ -4109,7 +4182,7 @@ function renderAssurancePortrait(container) {
     </div>
 
     <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
-    ${getExecutiveBannerHtml()}
+    ${getExecutiveBannerHtml('assurance')}
 
     <!-- 2-COLUMN BALANCED TABLES (12 SEKTOR LEFT & 11 SEKTOR RIGHT) -->
     <div class="portrait-grid-2col">
@@ -4200,7 +4273,7 @@ function renderOverviewPortrait(container) {
     </div>
 
     <!-- FOTO KE-2 (EXECUTIVE KPI & CAPAIAN PER STREAM BANNER) -->
-    ${getExecutiveBannerHtml()}
+    ${getExecutiveBannerHtml('overview')}
 
     <!-- 2-COLUMN OVERVIEW DETAILS -->
     <div class="portrait-grid-2col">
@@ -4770,6 +4843,9 @@ function renderExecutiveStats() {
   if (elSaldo) elSaldo.textContent = totSaldo;
   if (elSaldoSub) elSaldoSub.innerHTML = `<span>Assurance: <strong>${ass.saldo}</strong></span><span>PSB: <strong>${psb.saldo}</strong></span>`;
   if (elSaldoBar) elSaldoBar.style.width = saldoPct + '%';
+
+  const elAlertSaldo = document.getElementById('alert-total-saldo');
+  if (elAlertSaldo) elAlertSaldo.textContent = totSaldo + ' saldo';
 }
 
 // DYNAMIC NAVIGATION BADGES
