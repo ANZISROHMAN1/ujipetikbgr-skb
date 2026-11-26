@@ -1963,15 +1963,19 @@ function generatePSBTableHtml(items, startIdx) {{
 
     rows += `
       <tr>
-        <td class="num-col" style="color: var(--text-dim); width: 26px; text-align: center;">${{idx + 1}}</td>
-        <td style="width: 44px;"><strong style="color: var(--primary); font-size: 12px;">${{item.sto}}</strong></td>
-        <td style="width: 100px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${{item.sa}}">${{item.sa}}</td>
-        <td style="font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${{item.pic}}">${{item.pic}}</td>
-        <td class="num-col" style="width: 32px; text-align: center;">${{item.sampling}}</td>
-        <td class="num-col" style="width: 32px; text-align: center; color: var(--success); font-weight: 700;">${{item.done}}</td>
-        <td class="num-col" style="width: 32px; text-align: center; color: ${{numColor}}; font-weight: 800;">${{item.saldo}}</td>
-        <td class="num-col" style="width: 42px; text-align: center; color: ${{pctColor}}; font-weight: 800;">${{item.qc}}%</td>
-        <td style="width: 74px; text-align: center;"><span class="badge ${{badgeClass}}" style="font-size: 9px; padding: 2px 6px;">${{badgeText}}</span></td>
+        <td class="num-col" style="color: var(--text-dim); width: 24px; text-align: center; padding: 6px 2px;">${{idx + 1}}</td>
+        <td style="width: 40px; text-align: center; padding: 6px 2px;"><strong style="color: var(--primary); font-size: 12px;">${{item.sto}}</strong></td>
+        <td style="width: 135px; padding: 6px 4px; vertical-align: middle;">
+          <div style="font-size: 10.5px; font-weight: 700; color: var(--text-main); line-height: 1.25; word-break: break-word;">${{item.sa}}</div>
+        </td>
+        <td style="width: 105px; padding: 6px 4px; vertical-align: middle;">
+          <div style="font-size: 9.5px; color: var(--text-muted); line-height: 1.2; word-break: break-word;">${{item.pic}}</div>
+        </td>
+        <td class="num-col" style="width: 30px; text-align: center; padding: 6px 2px;">${{item.sampling}}</td>
+        <td class="num-col" style="width: 30px; text-align: center; color: var(--success); font-weight: 700; padding: 6px 2px;">${{item.done}}</td>
+        <td class="num-col" style="width: 30px; text-align: center; color: ${{numColor}}; font-weight: 800; padding: 6px 2px;">${{item.saldo}}</td>
+        <td class="num-col" style="width: 42px; text-align: center; color: ${{pctColor}}; font-weight: 800; padding: 6px 2px;">${{item.qc}}%</td>
+        <td style="width: 68px; text-align: center; padding: 6px 2px;"><span class="badge ${{badgeClass}}" style="font-size: 9px; padding: 2px 5px;">${{badgeText}}</span></td>
       </tr>
     `;
   }});
@@ -1981,15 +1985,15 @@ function generatePSBTableHtml(items, startIdx) {{
       <table>
         <thead>
           <tr>
-            <th style="width: 26px; text-align: center;">NO</th>
-            <th style="width: 44px;">STO</th>
-            <th style="width: 100px;">SA</th>
-            <th>PIC AREA</th>
-            <th class="num-col" style="width: 32px; text-align: center;">SMP</th>
-            <th class="num-col" style="width: 32px; text-align: center;">DONE</th>
-            <th class="num-col" style="width: 32px; text-align: center;">SLD</th>
-            <th class="num-col" style="width: 42px; text-align: center;">% QC</th>
-            <th style="width: 74px; text-align: center;">STATUS</th>
+            <th style="width: 24px; text-align: center; padding: 8px 2px;">NO</th>
+            <th style="width: 40px; text-align: center; padding: 8px 2px;">STO</th>
+            <th style="width: 135px; text-align: left; padding: 8px 4px;">SA</th>
+            <th style="width: 105px; text-align: left; padding: 8px 4px;">PIC AREA</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">SMP</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">DONE</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">SLD</th>
+            <th class="num-col" style="width: 42px; text-align: center; padding: 8px 2px;">% QC</th>
+            <th style="width: 68px; text-align: center; padding: 8px 2px;">STATUS</th>
           </tr>
         </thead>
         <tbody>
@@ -2077,14 +2081,18 @@ function generateAssuranceTableHtml(items, startIdx) {{
 
     rows += `
       <tr>
-        <td class="num-col" style="color: var(--text-dim); width: 26px; text-align: center;">${{idx + 1}}</td>
-        <td style="width: 120px; font-weight: 700; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${{item.sektor}}">${{item.sektor}}</td>
-        <td style="font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${{item.pic || '-'}}">${{item.pic || '-'}}</td>
-        <td class="num-col" style="width: 36px; text-align: center;">${{item.sampling}}</td>
-        <td class="num-col" style="width: 36px; text-align: center; color: var(--success); font-weight: 700;">${{item.done}}</td>
-        <td class="num-col" style="width: 36px; text-align: center; color: ${{numColor}}; font-weight: 800;">${{item.saldo}}</td>
-        <td class="num-col" style="width: 46px; text-align: center; color: ${{pctColor}}; font-weight: 800;">${{item.ach}}%</td>
-        <td style="width: 76px; text-align: center;"><span class="badge ${{badgeClass}}" style="font-size: 9px; padding: 2px 6px;">${{badgeText}}</span></td>
+        <td class="num-col" style="color: var(--text-dim); width: 24px; text-align: center; padding: 6px 2px;">${{idx + 1}}</td>
+        <td style="width: 215px; padding: 6px 6px; vertical-align: middle;">
+          <div style="font-weight: 800; font-size: 10.5px; color: var(--text-main); line-height: 1.25; word-break: break-word;">${{item.sektor}}</div>
+        </td>
+        <td style="width: 95px; padding: 6px 4px; vertical-align: middle;">
+          <div style="font-size: 9.5px; color: var(--text-muted); line-height: 1.2; word-break: break-word;">${{item.pic || '-'}}</div>
+        </td>
+        <td class="num-col" style="width: 30px; text-align: center; padding: 6px 2px;">${{item.sampling}}</td>
+        <td class="num-col" style="width: 30px; text-align: center; color: var(--success); font-weight: 700; padding: 6px 2px;">${{item.done}}</td>
+        <td class="num-col" style="width: 30px; text-align: center; color: ${{numColor}}; font-weight: 800; padding: 6px 2px;">${{item.saldo}}</td>
+        <td class="num-col" style="width: 42px; text-align: center; color: ${{pctColor}}; font-weight: 800; padding: 6px 2px;">${{item.ach}}%</td>
+        <td style="width: 68px; text-align: center; padding: 6px 2px;"><span class="badge ${{badgeClass}}" style="font-size: 9px; padding: 2px 5px;">${{badgeText}}</span></td>
       </tr>
     `;
   }});
@@ -2094,14 +2102,14 @@ function generateAssuranceTableHtml(items, startIdx) {{
       <table>
         <thead>
           <tr>
-            <th style="width: 26px; text-align: center;">NO</th>
-            <th style="width: 120px;">SEKTOR ASSURANCE</th>
-            <th>PIC AREA</th>
-            <th class="num-col" style="width: 36px; text-align: center;">SMP</th>
-            <th class="num-col" style="width: 36px; text-align: center;">DONE</th>
-            <th class="num-col" style="width: 36px; text-align: center;">SLD</th>
-            <th class="num-col" style="width: 46px; text-align: center;">% ACH</th>
-            <th style="width: 76px; text-align: center;">STATUS</th>
+            <th style="width: 24px; text-align: center; padding: 8px 2px;">NO</th>
+            <th style="width: 215px; text-align: left; padding: 8px 6px;">SEKTOR ASSURANCE</th>
+            <th style="width: 95px; text-align: left; padding: 8px 4px;">PIC AREA</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">SMP</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">DONE</th>
+            <th class="num-col" style="width: 30px; text-align: center; padding: 8px 2px;">SLD</th>
+            <th class="num-col" style="width: 42px; text-align: center; padding: 8px 2px;">% ACH</th>
+            <th style="width: 68px; text-align: center; padding: 8px 2px;">STATUS</th>
           </tr>
         </thead>
         <tbody>
